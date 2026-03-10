@@ -1,0 +1,105 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.ruleItem {
+    padding: 12px;
+    background: #f9fafb;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+}
+
+.ruleContent {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.ruleText {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.topicName {
+    font-weight: 500;
+    color: #1f2937;
+    background: #e5e7eb;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.operator {
+    color: #3b82f6;
+    font-weight: 500;
+    font-size: 12px;
+}
+
+.relation {
+    color: #f59e0b;
+    font-weight: 500;
+    font-size: 12px;
+}
+
+.removeButton {
+    flex-shrink: 0;
+}
+
+.empty {
+    padding: 20px;
+    text-align: center;
+    background: #f9fafb;
+    border-radius: 8px;
+    border: 1px dashed #e5e7eb;
+    color: #6b7280;
+}
+
+.container::-webkit-scrollbar {
+    width: 4px;
+}
+
+.container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 2px;
+}
+
+.container::-webkit-scrollbar-thumb {
+    background: #cbd5e0;
+    border-radius: 2px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .ruleItem {
+        background: #1f2937;
+        border-color: #374151;
+    }
+
+    .topicName {
+        background: #374151;
+        color: #e5e7eb;
+    }
+
+    .empty {
+        background: #1f2937;
+        border-color: #374151;
+        color: #9ca3af;
+    }
+
+    .container::-webkit-scrollbar-track {
+        background: #374151;
+    }
+
+    .container::-webkit-scrollbar-thumb {
+        background: #4b5563;
+    }
+}

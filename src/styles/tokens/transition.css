@@ -1,0 +1,26 @@
+:root {
+
+    --duration-fast: 150ms;
+    --duration-base: 250ms;
+    --duration-slow: 350ms;
+
+    --easing-base: cubic-bezier(0.4, 0, 0.2, 1);
+    --easing-in: cubic-bezier(0.4, 0, 1, 1);
+    --easing-out: cubic-bezier(0, 0, 0.2, 1);
+    --easing-bounce: cubic-bezier(0.68, -0.6, 0.32, 1.6);
+
+    --transition-all: all var(--duration-base) var(--easing-base);
+    --transition-colors: color var(--duration-base) var(--easing-base),
+        background-color var(--duration-base) var(--easing-base),
+        border-color var(--duration-base) var(--easing-base);
+    --transition-transform: transform var(--duration-base) var(--easing-base);
+    --transition-opacity: opacity var(--duration-base) var(--easing-base);
+    --transition-shadow: box-shadow var(--duration-base) var(--easing-base);
+
+    --transition-hover: all var(--duration-fast) var(--easing-base);
+    --transition-focus: all var(--duration-fast) var(--easing-out);
+
+    --transition-modal: opacity var(--duration-base) var(--easing-out),
+        transform var(--duration-base) var(--easing-out);
+    --transition-fade: opacity var(--duration-base) var(--easing-base);
+}

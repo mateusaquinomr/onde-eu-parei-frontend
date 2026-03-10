@@ -1,0 +1,51 @@
+:root {
+
+    --form-bg: var(--color-bg);
+    --form-text: var(--color-text-primary);
+    --form-placeholder: var(--color-text-tertiary);
+    --form-label: var(--color-text-secondary);
+    --form-helper: var(--color-text-tertiary);
+    --form-error: var(--color-error);
+    --form-success: var(--color-success);
+    --form-disabled: var(--color-text-disabled);
+
+    --form-border: var(--color-border);
+    --form-border-hover: var(--color-border-strong);
+    --form-border-focus: var(--color-primary);
+    --form-border-error: var(--color-error);
+    --form-border-success: var(--color-success);
+    --form-border-disabled: var(--color-border-muted);
+
+    --form-bg-hover: var(--color-bg);
+    --form-bg-focus: var(--color-bg);
+    --form-bg-error: var(--color-error-subtle);
+    --form-bg-success: var(--color-success-subtle);
+    --form-bg-disabled: var(--color-bg-muted);
+    --form-bg-readonly: var(--color-bg-muted);
+
+    --checkbox-bg: var(--color-bg);
+    --checkbox-border: var(--color-border);
+    --checkbox-border-checked: var(--color-primary);
+    --checkbox-bg-checked: var(--color-primary);
+    --checkbox-check-color: var(--color-text-inverse);
+
+    --radio-bg: var(--color-bg);
+    --radio-border: var(--color-border);
+    --radio-border-checked: var(--color-primary);
+    --radio-bg-checked: var(--color-primary);
+    --radio-dot-color: var(--color-text-inverse);
+
+    --select-bg: var(--color-bg);
+    --select-text: var(--color-text-primary);
+    --select-border: var(--color-border);
+    --select-border-focus: var(--color-primary);
+    --select-option-bg: var(--color-bg);
+    --select-option-bg-hover: var(--color-primary-subtle);
+    --select-option-text: var(--color-text-primary);
+
+    --textarea-bg: var(--color-bg);
+    --textarea-text: var(--color-text-primary);
+    --textarea-border: var(--color-border);
+    --textarea-border-focus: var(--color-primary);
+    --textarea-resizer: var(--color-border);
+}

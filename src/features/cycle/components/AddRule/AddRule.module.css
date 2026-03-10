@@ -1,0 +1,44 @@
+.container {
+    width: 100%;
+}
+
+.row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.field {
+    flex: 2;
+    min-width: 180px;
+}
+
+.operator {
+    flex: 1;
+    min-width: 100px;
+}
+
+.relation {
+    flex: 1;
+    min-width: 100px;
+}
+
+@media (max-width: 768px) {
+    .row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .field,
+    .operator,
+    .relation {
+        width: 100%;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .container {
+        background: transparent;
+    }
+}

@@ -1,0 +1,107 @@
+.container {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.heatmap {
+    margin-top: 16px;
+}
+
+.daysHeader {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-bottom: 8px;
+}
+
+.daysHeader span {
+    font-size: 10px;
+    color: #6b7280;
+    text-align: center;
+}
+
+.weeks {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.week {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+
+.day {
+    aspect-ratio: 1;
+    border-radius: 3px;
+    transition: transform 0.2s ease;
+    cursor: pointer;
+}
+
+.day:hover {
+    transform: scale(1.2);
+}
+
+.intensity0 {
+    background: #e5e7eb;
+}
+
+.intensity1 {
+    background: #9fe0b0;
+}
+
+.intensity2 {
+    background: #4fc08d;
+}
+
+.intensity3 {
+    background: #2e9a6e;
+}
+
+.intensity4 {
+    background: #1e6f4c;
+}
+
+.legend {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.legendItem {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.legendColor {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+}
+
+.legendLabel {
+    font-size: 10px;
+    color: #6b7280;
+}
+
+@media (prefers-color-scheme: dark) {
+    .container {
+        background: #1f2937;
+    }
+
+    .daysHeader span {
+        color: #9ca3af;
+    }
+
+    .intensity0 {
+        background: #374151;
+    }
+
+    .legendLabel {
+        color: #9ca3af;
+    }
+}

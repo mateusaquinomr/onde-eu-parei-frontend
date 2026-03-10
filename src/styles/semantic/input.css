@@ -1,0 +1,45 @@
+:root {
+
+    --input-bg: var(--form-bg);
+    --input-text: var(--form-text);
+    --input-placeholder: var(--form-placeholder);
+    --input-label: var(--form-label);
+    --input-helper: var(--form-helper);
+    --input-error: var(--form-error);
+    --input-success: var(--form-success);
+    --input-disabled: var(--form-disabled);
+
+    --input-border: var(--form-border);
+    --input-border-hover: var(--form-border-hover);
+    --input-border-focus: var(--form-border-focus);
+    --input-border-error: var(--form-border-error);
+    --input-border-success: var(--form-border-success);
+    --input-border-disabled: var(--form-border-disabled);
+
+    --input-bg-hover: var(--form-bg-hover);
+    --input-bg-focus: var(--form-bg-focus);
+    --input-bg-error: var(--form-bg-error);
+    --input-bg-success: var(--form-bg-success);
+    --input-bg-disabled: var(--form-bg-disabled);
+    --input-bg-readonly: var(--form-bg-readonly);
+
+    --input-height-sm: 2rem;
+    --input-height-md: 2.5rem;
+    --input-height-lg: 3rem;
+    --input-padding-x: 0.75rem;
+    --input-padding-y: 0.5rem;
+    --input-border-radius: 0.375rem;
+    --input-font-size: var(--font-size-base);
+
+    --input-icon-color: var(--color-text-tertiary);
+    --input-icon-color-hover: var(--color-text-secondary);
+    --input-icon-color-focus: var(--color-primary);
+    --input-icon-color-error: var(--color-error);
+    --input-icon-color-success: var(--color-success);
+    --input-icon-color-disabled: var(--color-text-disabled);
+
+    --input-group-bg: var(--color-bg-muted);
+    --input-group-text: var(--color-text-secondary);
+    --input-group-border: var(--color-border);
+    --input-group-divider: var(--color-border);
+}

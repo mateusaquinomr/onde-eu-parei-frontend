@@ -1,0 +1,271 @@
+.card {
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s, box-shadow 0.2s;
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    gap: 16px;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.title {
+    margin: 0;
+    flex: 1;
+    word-break: break-word;
+    font-size: 16px;
+}
+
+.badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+    color: white;
+    white-space: nowrap;
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 4px 0;
+}
+
+.tag {
+    padding: 3px 10px;
+    background: #f3f4f6;
+    border-radius: 20px;
+    font-size: 11px;
+    color: #4b5563;
+    transition: background 0.2s;
+}
+
+.tag:hover {
+    background: #e5e7eb;
+}
+
+.progressContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+}
+
+.statsRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 12px;
+}
+
+.statItem {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 2px;
+}
+
+.statDivider {
+    width: 1px;
+    height: 24px;
+    background-color: #e5e7eb;
+}
+
+.statLabel {
+    color: #6b7280;
+    /* font-size: 10px; */
+    /* text-transform: uppercase; */
+    letter-spacing: 0.3px;
+}
+
+.statValue {
+    font-weight: 600;
+    color: #1f2937;
+    font-size: 13px;
+}
+
+.contentsSection {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 4px;
+}
+
+.contentsHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.contentsLabel {
+    color: #4b5563;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.contentsList {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.contentItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    background: #f9fafb;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.contentItem:hover {
+    background: #f3f4f6;
+}
+
+.contentStatus {
+    font-size: 12px;
+    width: 16px;
+    text-align: center;
+}
+
+.contentStatus.completed {
+    color: #10b981;
+}
+
+.contentTitle {
+    flex: 1;
+    font-size: 12px;
+    color: #1f2937;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.emptyContents {
+    color: #9ca3af;
+    font-style: italic;
+    padding: 8px;
+    text-align: center;
+    background: #f9fafb;
+    border-radius: 6px;
+}
+
+.viewAllContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 8px;
+    padding: 6px 0;
+    /* border-top: 1px solid #e5e7eb; */
+}
+
+.viewAllText {
+    color: #3b82f6;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 11px;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.arrow {
+    font-size: 10px;
+    transition: transform 0.2s;
+}
+
+.viewAllText:hover {
+    color: #2563eb;
+}
+
+.viewAllText:hover .arrow {
+    transform: translateY(2px);
+}
+
+@media (prefers-color-scheme: dark) {
+    .card {
+        background: #1f2937;
+    }
+
+    .tag {
+        background: #374151;
+        color: #e5e7eb;
+    }
+
+    .tag:hover {
+        background: #4b5563;
+    }
+
+    .statLabel {
+        color: #9ca3af;
+    }
+
+    .statValue {
+        color: #f3f4f6;
+    }
+
+    .statDivider {
+        background-color: #374151;
+    }
+
+    .contentsLabel {
+        color: #9ca3af;
+    }
+
+    .contentItem {
+        background: #374151;
+    }
+
+    .contentItem:hover {
+        background: #4b5563;
+    }
+
+    .contentTitle {
+        color: #e5e7eb;
+    }
+
+    .emptyContents {
+        background: #374151;
+        color: #9ca3af;
+    }
+
+    .viewAllContainer {
+        border-top-color: #374151;
+    }
+
+    .viewAllText {
+        color: #60a5fa;
+    }
+
+    .viewAllText:hover {
+        color: #93c5fd;
+    }
+}
+
+@media (max-width: 768px) {
+    .card {
+        width: 100%;
+        min-width: 280px;
+    }
+}

@@ -1,0 +1,147 @@
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.title {
+    margin: 0;
+}
+
+.reconfigureButton {
+    flex-shrink: 0;
+}
+
+.dates {
+    display: flex;
+    gap: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.dateItem {
+    color: #6b7280;
+    font-size: 11px;
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.hoursRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 4px 0;
+}
+
+.hourItem {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 2px;
+}
+
+.hourValue {
+    font-weight: 600;
+    color: #3b82f6;
+    font-size: 16px;
+}
+
+.hourDivider {
+    color: #9ca3af;
+    font-size: 16px;
+}
+
+.topicsList {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.topicItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    border-bottom: 1px dashed #f0f0f0;
+}
+
+.topicNumber {
+    color: #9ca3af;
+    font-size: 12px;
+    min-width: 24px;
+}
+
+.topicName {
+    color: #1f2937;
+    font-size: 14px;
+}
+
+.rulesList {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.ruleItem {
+    padding: 6px 10px;
+    background: #f9fafb;
+    border-radius: 4px;
+    border-left: 2px solid #3b82f6;
+}
+
+.ruleText {
+    font-size: 12px;
+    color: #1f2937;
+}
+
+
+@media (prefers-color-scheme: dark) {
+    .card {
+        background: #1f2937;
+    }
+
+    .dates {
+        border-bottom-color: #374151;
+    }
+
+    .dateItem {
+        color: #9ca3af;
+    }
+
+    .topicItem {
+        border-bottom-color: #374151;
+    }
+
+    .topicName {
+        color: #e5e7eb;
+    }
+
+    .ruleItem {
+        background: #374151;
+    }
+
+    .ruleText {
+        color: #e5e7eb;
+    }
+
+    .hourDivider {
+        color: #4b5563;
+    }
+}

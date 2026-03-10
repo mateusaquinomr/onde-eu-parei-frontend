@@ -1,0 +1,106 @@
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    transition: all 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.icon {
+    font-size: 24px;
+    line-height: 1;
+}
+
+.content {
+    flex: 1;
+}
+
+.label {
+    color: #6b7280;
+    margin-bottom: 4px;
+}
+
+.valueContainer {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.value {
+    font-size: 24px;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.unit {
+    font-size: 14px;
+    font-weight: 400;
+    color: #6b7280;
+    margin-left: 2px;
+}
+
+.trend {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 16px;
+    background: #f3f4f6;
+}
+
+.trendUp {
+    color: #10b981;
+}
+
+.trendDown {
+    color: #ef4444;
+}
+
+.trendNeutral {
+    color: #6b7280;
+}
+
+.trendIcon {
+    font-size: 10px;
+}
+
+.trendValue {
+    font-weight: 600;
+}
+
+.trendComparison {
+    color: #6b7280;
+}
+
+@media (prefers-color-scheme: dark) {
+    .card {
+        background: #1f2937;
+    }
+
+    .label {
+        color: #9ca3af;
+    }
+
+    .value {
+        color: #f3f4f6;
+    }
+
+    .unit {
+        color: #9ca3af;
+    }
+
+    .trend {
+        background: #374151;
+    }
+}

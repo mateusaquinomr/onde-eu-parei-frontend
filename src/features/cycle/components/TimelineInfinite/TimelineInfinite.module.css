@@ -1,0 +1,331 @@
+/* src/features/cycle/components/TimelineInfinite/TimelineInfinite.module.css */
+.container {
+    position: relative;
+    width: 100%;
+    height: 450px;
+    display: flex;
+    flex-direction: column;
+    background: transparent;
+}
+
+.scrollContainer {
+    flex: 1;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+    position: relative;
+    padding: 15px 0;
+}
+
+.scrollContainer::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    background: transparent;
+}
+
+.scrollContainer {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+    padding-left: 30px;
+}
+
+.timelineItem {
+    display: flex;
+    gap: 16px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.lineContainer {
+    position: relative;
+    width: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e5e7eb;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: background 0.2s ease;
+}
+
+.dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #e5e7eb;
+    border: 2px solid white;
+    position: relative;
+    z-index: 2;
+    transition: all 0.2s ease;
+    margin-top: 16px;
+}
+
+.activeDot {
+    background: #3b82f6;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+    transform: scale(1.2);
+}
+
+.card {
+    flex: 1;
+    background: #f9fafb;
+    border-radius: 10px;
+    padding: 12px;
+    border: 1px solid #e5e7eb;
+    transition: all 0.2s ease;
+}
+
+.card:hover {
+    transform: translateX(4px);
+    border-color: #d1d5db;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.activeCard {
+    background: #eff6ff;
+    border-color: #3b82f6;
+    border-width: 2px;
+}
+
+/* Linha com duas colunas */
+.cardRow {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    /* margin-bottom: 12px; */
+}
+
+/* Coluna esquerda */
+.leftColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.position {
+    font-size: 11px;
+    font-weight: 600;
+    color: #6b7280;
+    background: #e5e7eb;
+    padding: 2px 6px;
+    border-radius: 10px;
+    align-self: flex-start;
+}
+
+.activeCard .position {
+    background: #3b82f6;
+    color: white;
+}
+
+.topicName {
+    font-weight: 500;
+    color: #1f2937;
+    font-size: 14px;
+    margin: 0;
+}
+
+.lastContent {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    background: rgba(59, 130, 246, 0.05);
+    padding: 3px 6px;
+    border-radius: 4px;
+    max-width: fit-content;
+}
+
+.lastContentLabel {
+    color: #6b7280;
+    font-weight: 400;
+}
+
+.lastContentText {
+    color: #3b82f6;
+    font-weight: 500;
+}
+
+/* Coluna direita */
+.rightColumn {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    min-width: 60px;
+}
+
+.hours {
+    font-weight: 600;
+    color: #3b82f6;
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+.playButton {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #3b82f6;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    border: none;
+    padding: 0;
+}
+
+.playButton:hover {
+    background: #2563eb;
+    transform: scale(1.1);
+}
+
+.playIcon {
+    font-size: 12px;
+    line-height: 1;
+    margin-left: 2px;
+}
+
+/* Barra de progresso - largura total */
+.completedBadge {
+    font-size: 11px;
+    color: #10b981;
+    text-align: right;
+    margin-top: 4px;
+}
+
+.progressBar {
+    height: 3px;
+    background: #e5e7eb;
+    border-radius: 2px;
+    overflow: hidden;
+    width: 100%;
+}
+
+.progressFill {
+    height: 100%;
+    background: #3b82f6;
+    transition: width 0.3s ease;
+}
+
+/* Primeiro e último item */
+.timelineItem:first-child .line {
+    top: 16px;
+}
+
+.timelineItem:last-child .line {
+    bottom: 16px;
+}
+
+/* Modo escuro */
+@media (prefers-color-scheme: dark) {
+    .line {
+        background: #374151;
+    }
+
+    .dot {
+        background: #374151;
+        border-color: #1f2937;
+    }
+
+    .activeDot {
+        background: #3b82f6;
+    }
+
+    .card {
+        background: #1f2937;
+        border-color: #374151;
+    }
+
+    .card:hover {
+        border-color: #4b5563;
+    }
+
+    .activeCard {
+        background: #1e3a5f;
+        border-color: #3b82f6;
+    }
+
+    .position {
+        background: #374151;
+        color: #9ca3af;
+    }
+
+    .activeCard .position {
+        background: #3b82f6;
+        color: white;
+    }
+
+    .topicName {
+        color: #e5e7eb;
+    }
+
+    .lastContent {
+        background: rgba(59, 130, 246, 0.15);
+    }
+
+    .lastContentLabel {
+        color: #9ca3af;
+    }
+
+    .progressBar {
+        background: #374151;
+    }
+
+    .playButton {
+        background: #3b82f6;
+    }
+
+    .playButton:hover {
+        background: #2563eb;
+    }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .container {
+        height: 400px;
+    }
+
+    .card {
+        padding: 10px;
+    }
+
+    .timeline {
+        padding-left: 20px;
+        gap: 12px;
+    }
+
+    .playButton {
+        width: 24px;
+        height: 24px;
+    }
+
+    .playIcon {
+        font-size: 10px;
+    }
+
+    .lastContent {
+        font-size: 10px;
+        padding: 2px 4px;
+    }
+
+    .rightColumn {
+        min-width: 50px;
+    }
+}

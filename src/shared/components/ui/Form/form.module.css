@@ -1,0 +1,52 @@
+input {
+    height: var(--spacing-25-md);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-10-df);
+    background-color: var(--form-bg);
+    border: 1px solid var(--input-border);
+}
+
+.textarea {
+    min-height: var(--spacing-25-lg);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-10-df);
+    border: 1px solid var(--input-border);
+}
+
+.select {
+    height: var(--spacing-25-md);
+    border-radius: var(--radius-md);
+    padding-left: var(--spacing-10-df);
+    background-color: var(--form-bg);
+    border: 1px solid var(--input-border);
+}
+
+.multiSelect {
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing-25-sm);
+}
+
+.multiSelect label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.radioGroup {
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing-25-sm);
+}
+
+.radioGroup label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}

@@ -1,0 +1,72 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.label {
+    color: #6b7280;
+    font-size: 12px;
+}
+
+.valueContainer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 6px 8px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    min-height: 36px;
+}
+
+.valueContainer:hover {
+    background-color: #f3f4f6;
+}
+
+.valueContainer:hover .editIcon {
+    opacity: 1;
+}
+
+.valueContainer:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+.editableValue {
+    flex: 1;
+}
+
+.editIcon {
+    opacity: 0;
+    font-size: 14px;
+    color: #6b7280;
+    transition: opacity 0.2s;
+}
+
+.colorDot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+    .label {
+        color: #9ca3af;
+    }
+
+    .valueContainer:hover {
+        background-color: #374151;
+    }
+
+    .editIcon {
+        color: #9ca3af;
+    }
+}

@@ -1,0 +1,159 @@
+.container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.dropdownButton {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    min-height: 40px;
+}
+
+.dropdownButton:hover {
+    border-color: #3b82f6;
+}
+
+.dropdownButton.open {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.selectedText {
+    color: #1f2937;
+    font-size: 14px;
+}
+
+.arrow {
+    color: #6b7280;
+    font-size: 12px;
+}
+
+.dropdownMenu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 4px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    max-height: 400px;
+    display: flex;
+    flex-direction: column;
+}
+
+.searchBox {
+    padding: 12px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.searchInput {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.searchInput:focus {
+    outline: none;
+    border-color: #3b82f6;
+}
+
+.optionsList {
+    overflow-y: auto;
+    max-height: 300px;
+    padding: 8px;
+}
+
+.option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.option:hover {
+    background: #f3f4f6;
+}
+
+.option input[type="checkbox"] {
+    cursor: pointer;
+}
+
+.optionLabel {
+    font-size: 14px;
+    color: #1f2937;
+}
+
+.topicCount {
+    color: #6b7280;
+    font-size: 12px;
+    margin-left: 4px;
+}
+
+.noResults {
+    padding: 16px;
+    text-align: center;
+    color: #6b7280;
+}
+
+.hint {
+    color: #6b7280;
+    font-style: italic;
+}
+
+@media (prefers-color-scheme: dark) {
+    .dropdownButton {
+        background: #1f2937;
+        border-color: #374151;
+    }
+
+    .selectedText {
+        color: #e5e7eb;
+    }
+
+    .dropdownMenu {
+        background: #1f2937;
+        border-color: #374151;
+    }
+
+    .searchBox {
+        border-bottom-color: #374151;
+    }
+
+    .searchInput {
+        background: #374151;
+        border-color: #4b5563;
+        color: #e5e7eb;
+    }
+
+    .option:hover {
+        background: #374151;
+    }
+
+    .optionLabel {
+        color: #e5e7eb;
+    }
+
+    .topicCount {
+        color: #9ca3af;
+    }
+
+    .hint {
+        color: #9ca3af;
+    }
+}

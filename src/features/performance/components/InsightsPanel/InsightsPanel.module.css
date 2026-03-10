@@ -1,0 +1,66 @@
+.container {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.insightsList {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.insight {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 8px;
+    /* background: #f9fafb; */
+    transition: transform 0.2s ease;
+}
+
+.insight:hover {
+    transform: translateX(4px);
+}
+
+/* .positive {
+    border-left: 3px solid #10b981;
+}
+
+.neutral {
+    border-left: 3px solid #3b82f6;
+}
+
+.alert {
+    border-left: 3px solid #ef4444;
+} */
+
+.icon {
+    font-size: 20px;
+    line-height: 1;
+}
+
+.content {
+    flex: 1;
+}
+
+.detail {
+    color: #6b7280;
+    margin-top: 4px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .container {
+        background: #1f2937;
+    }
+
+    .insight {
+        background: #374151;
+    }
+
+    .detail {
+        color: #9ca3af;
+    }
+}

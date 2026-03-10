@@ -1,0 +1,87 @@
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 16px;
+}
+
+.timeDisplay {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.timeValue {
+    font-size: 32px;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.timeUnit {
+    font-size: 14px;
+    color: #6b7280;
+    margin-left: 2px;
+}
+
+.trend {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    border-radius: 16px;
+    font-size: 12px;
+}
+
+.trendUp {
+    background: #d1fae5;
+    color: #10b981;
+}
+
+.trendDown {
+    background: #fee2e2;
+    color: #ef4444;
+}
+
+.trendIcon {
+    font-size: 10px;
+}
+
+.trendValue {
+    font-weight: 600;
+}
+
+.trendLabel {
+    color: inherit;
+    opacity: 0.8;
+}
+
+@media (prefers-color-scheme: dark) {
+    .card {
+        background: #1f2937;
+    }
+
+    .timeValue {
+        color: #f3f4f6;
+    }
+
+    .timeUnit {
+        color: #9ca3af;
+    }
+
+    .trendUp {
+        background: #064e3b;
+        color: #34d399;
+    }
+
+    .trendDown {
+        background: #7f1d1d;
+        color: #f87171;
+    }
+}

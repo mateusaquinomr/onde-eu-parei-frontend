@@ -1,0 +1,59 @@
+.dragHandle {
+    cursor: grab;
+    padding: 0 8px;
+    color: #9ca3af;
+    user-select: none;
+    font-size: 20px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    transition: color 0.2s, background-color 0.2s;
+    border-radius: 4px;
+}
+
+.dragHandle:hover {
+    color: #4b5563;
+    background-color: #f3f4f6;
+}
+
+.dragHandle:active {
+    cursor: grabbing;
+    color: #3b82f6;
+    background-color: #e5e7eb;
+}
+
+.dragHandle:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+.icon {
+    display: inline-block;
+    transform: rotate(90deg);
+    letter-spacing: 2px;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .dragHandle {
+        padding: 8px 12px;
+        font-size: 24px;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .dragHandle {
+        color: #6b7280;
+    }
+
+    .dragHandle:hover {
+        color: #e5e7eb;
+        background-color: #374151;
+    }
+
+    .dragHandle:active {
+        color: #60a5fa;
+        background-color: #4b5563;
+    }
+}

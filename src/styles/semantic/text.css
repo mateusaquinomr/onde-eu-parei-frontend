@@ -1,0 +1,24 @@
+:root {
+
+    --text-heading: var(--color-text-primary);
+    --text-heading-card: var(--color-text-primary);
+    --text-card-section: var(--color-text-primary);
+    --text-label-form: var(--form-text);
+    --text-body: var(--color-text-primary);
+    --text-body-secondary: var(--color-text-secondary);
+    --text-muted: var(--color-text-tertiary);
+    --text-placeholder: var(--color-text-tertiary);
+    --text-disabled: var(--color-text-disabled);
+
+    --text-link: var(--color-primary);
+    --text-link-hover: var(--color-primary-700);
+    --text-link-visited: var(--color-primary-800);
+
+    --text-success: var(--color-success-600);
+    --text-warning: var(--color-warning-600);
+    --text-error: var(--color-error-600);
+    --text-info: var(--color-info-600);
+
+    --text-inverse: var(--color-white);
+    --text-inverse-muted: var(--color-neutral-200);
+}

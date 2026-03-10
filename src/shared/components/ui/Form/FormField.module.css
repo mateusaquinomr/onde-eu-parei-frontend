@@ -1,0 +1,23 @@
+.field {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.top {
+    flex-direction: column;
+}
+
+.side {
+    flex-direction: row;
+    align-items: center;
+}
+
+.label {
+    min-width: 120px;
+}
+
+.control {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}

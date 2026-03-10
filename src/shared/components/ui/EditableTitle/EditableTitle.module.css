@@ -1,0 +1,94 @@
+/* src/shared/components/ui/EditableTitle/EditableTitle.module.css */
+.container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.container:hover {
+    background-color: #f9fafb;
+}
+
+.container:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+.title {
+    margin: 0;
+    transition: background-color 0.2s;
+}
+
+.editButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.2s;
+    color: #6b7280;
+    opacity: 0;
+    /* Ícone invisível por padrão */
+}
+
+.container:hover .editButton {
+    opacity: 1;
+    /* Aparece no hover do container */
+}
+
+.editButton:hover {
+    background-color: #e5e7eb;
+    transform: scale(1.1);
+    color: #3b82f6;
+}
+
+.editButton:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+    opacity: 1;
+    /* Visível quando focado */
+}
+
+.editingContainer {
+    width: 100%;
+}
+
+.editInput {
+    font-size: inherit;
+    font-weight: inherit;
+    padding: 8px 12px;
+    border: 2px solid #3b82f6;
+    border-radius: 8px;
+    width: 100%;
+    transition: all 0.2s;
+}
+
+.editInput:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Modo escuro */
+@media (prefers-color-scheme: dark) {
+    .container:hover {
+        background-color: #1f2937;
+    }
+
+    .editButton:hover {
+        background-color: #374151;
+        color: #60a5fa;
+    }
+
+    .editButton {
+        color: #9ca3af;
+    }
+}

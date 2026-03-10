@@ -1,0 +1,27 @@
+:root {
+
+    --feedback-success-bg: var(--color-success-subtle);
+    --feedback-success-text: var(--color-success);
+    --feedback-success-border: var(--color-success);
+    --feedback-success-icon: var(--color-success);
+
+    --feedback-error-bg: var(--color-error-subtle);
+    --feedback-error-text: var(--color-error);
+    --feedback-error-border: var(--color-error);
+    --feedback-error-icon: var(--color-error);
+
+    --feedback-warning-bg: var(--color-warning-subtle);
+    --feedback-warning-text: var(--color-warning);
+    --feedback-warning-border: var(--color-warning);
+    --feedback-warning-icon: var(--color-warning);
+
+    --feedback-info-bg: var(--color-info-subtle);
+    --feedback-info-text: var(--color-info);
+    --feedback-info-border: var(--color-info);
+    --feedback-info-icon: var(--color-info);
+
+    --feedback-neutral-bg: var(--color-gray-100);
+    --feedback-neutral-text: var(--color-gray-700);
+    --feedback-neutral-border: var(--color-gray-300);
+    --feedback-neutral-icon: var(--color-gray-500);
+}

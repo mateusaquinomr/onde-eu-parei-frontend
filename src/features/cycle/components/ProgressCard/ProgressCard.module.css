@@ -1,0 +1,85 @@
+/* src/features/cycle/components/ProgressCard/ProgressCard.module.css */
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.progressSection {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    justify-content: center;
+}
+
+.timeInfo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.timeItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 4px;
+    min-width: 60px;
+}
+
+.timeValue {
+    color: #3b82f6;
+    font-size: 28px;
+    font-weight: 600;
+}
+
+.timeDivider {
+    color: #9ca3af;
+    font-size: 20px;
+    font-weight: 300;
+}
+
+.statsGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding-top: 16px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.statItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 4px;
+}
+
+.statValue {
+    font-weight: 600;
+    color: #1f2937;
+    font-size: 18px;
+}
+
+/* Modo escuro */
+@media (prefers-color-scheme: dark) {
+    .card {
+        background: #1f2937;
+    }
+
+    .statsGrid {
+        border-top-color: #374151;
+    }
+
+    .statValue {
+        color: #e5e7eb;
+    }
+
+    .timeDivider {
+        color: #4b5563;
+    }
+}
