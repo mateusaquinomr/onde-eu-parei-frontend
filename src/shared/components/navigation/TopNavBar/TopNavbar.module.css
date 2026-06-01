@@ -1,0 +1,200 @@
+.topNavbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 2rem;
+    background-color: #ffffff;
+    width: 100%;
+    height: 72px;
+    box-sizing: border-box;
+    border-bottom: 1px solid var(--border-default, #e5e7eb);
+}
+
+.logoPlaceholder {
+    width: 120px;
+    height: 40px;
+    background: black;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+}
+
+.userButtonContainer {
+    position: relative;
+}
+
+.userButton {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 16px 6px 8px;
+    background: var(--surface-card, #ffffff);
+    border: 1px solid var(--border-default, #e5e7eb);
+    border-radius: 60px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.userButton:hover {
+    background: var(--surface-hover, #f9fafb);
+    border-color: var(--border-hover, #d1d5db);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.userAvatar {
+    width: 36px;
+    height: 36px;
+    background: #3b82f6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.userAvatar .material-icons {
+    font-size: 20px;
+}
+
+.userName {
+    font-weight: 500;
+    color: var(--text-primary, #1f2937);
+}
+
+.dropdownIcon {
+    font-size: 20px;
+    color: var(--text-secondary, #6b7280);
+    transition: transform 0.2s ease;
+}
+
+.dropdownIcon.rotated {
+    transform: rotate(180deg);
+}
+
+.dropdownMenu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 200px;
+    width: auto;
+    background: var(--surface-card, #ffffff);
+    border: 1px solid var(--border-default, #e5e7eb);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    z-index: 1000;
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdownItem {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 10px 16px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.dropdownItem:hover {
+    background: var(--surface-hover, #f9fafb);
+}
+
+.dropdownItem .material-icons {
+    font-size: 20px;
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary, #6b7280);
+    flex-shrink: 0;
+}
+
+.settingsIcon {
+    font-size: 20px !important;
+    width: 24px !important;
+    min-width: 24px !important;
+    max-width: 24px !important;
+    height: 24px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    letter-spacing: normal !important;
+    word-spacing: normal !important;
+    color: var(--text-secondary, #6b7280);
+}
+
+.dropdownItemText {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-primary, #1f2937);
+    line-height: 1.4;
+}
+
+@media (prefers-color-scheme: dark) {
+    .userButton {
+        background: #1f2937;
+        border-color: #374151;
+    }
+
+    .userButton:hover {
+        background: #374151;
+    }
+
+    .dropdownMenu {
+        background: #1f2937;
+        border-color: #374151;
+    }
+
+    .dropdownItem:hover {
+        background: #374151;
+    }
+
+    .dropdownItemText {
+        color: #f3f4f6;
+    }
+
+    .settingsIcon {
+        color: #9ca3af;
+    }
+}
+
+@media (max-width: 640px) {
+    .topNavbar {
+        padding: 0.75rem 1rem;
+    }
+
+    .userButton {
+        padding: 6px 12px 6px 6px;
+    }
+
+    .userName {
+        display: none;
+    }
+
+    .dropdownMenu {
+        min-width: 170px;
+    }
+}

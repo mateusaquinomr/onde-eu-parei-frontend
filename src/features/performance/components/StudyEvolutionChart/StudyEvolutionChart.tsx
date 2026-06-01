@@ -17,7 +17,9 @@ export function StudyEvolutionChart({ data }: StudyEvolutionChartProps) {
             <Text variant="cardTitle">Evolução de Estudo</Text>
 
             <div className={styles.insight}>
-                <span className={styles.insightIcon}>Lâmpada</span>
+                <span className={styles.insightIcon}>
+                    <span className="material-icons">lightbulb</span>
+                </span>
                 <Text variant="caption">
                     Seu dia mais produtivo é {bestDay.day} ({bestDay.hours}h)
                 </Text>

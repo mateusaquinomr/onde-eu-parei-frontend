@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button } from '@/shared/components/ui/Button/Button';
 import { Step1BasicInfo } from './Step1BasicInfo';
 import { Step2Contents } from './Step2Contents';
-import type { CreateTopicDTO, Content } from '../../../types/topic.types';
+import type { CreateTopicDTO, Content, ImportanceLevel } from '../../../types/topic.types';
 import styles from './CreateTopicModal.module.css';
 
 interface CreateTopicModalProps {
@@ -10,6 +10,25 @@ interface CreateTopicModalProps {
     onClose: () => void;
     onSave: (topicData: CreateTopicDTO) => void;
 }
+
+const createFullContent = (title: string, importance: ImportanceLevel, order: number): Content => ({
+    id: crypto.randomUUID(),
+    title,
+    importance,
+    completed: false,
+    order,
+    createdAt: new Date(),
+    checklist: [],
+    studyData: {
+        totalTimeSpent: 0,
+        notes: '',
+        startedAt: null,
+        completedAt: null,
+        lastReviewDate: null,
+        nextReviewDate: null,
+        reviewHistory: []
+    }
+});
 
 export function CreateTopicModal({ isOpen, onClose, onSave }: CreateTopicModalProps) {
     const [step, setStep] = useState(1);
@@ -45,14 +64,9 @@ export function CreateTopicModal({ isOpen, onClose, onSave }: CreateTopicModalPr
         onClose();
     };
 
-    const initialContentsForStep2: Content[] = (topicData.contents || []).map((c, index) => ({
-        id: crypto.randomUUID(),
-        title: c.title,
-        importance: c.importance,
-        completed: false,
-        order: index,
-        createdAt: new Date()
-    }));
+    const initialContentsForStep2: Content[] = (topicData.contents || []).map((c, index) =>
+        createFullContent(c.title, c.importance, index)
+    );
 
     return (
         <div className={styles.overlay}>

@@ -19,29 +19,29 @@ export function usePerformanceData() {
                             id: '1',
                             label: 'Tempo total estudado',
                             value: '32h 40m',
-                            change: { value: 12, trend: 'up', comparison: 'vs semana passada' },
-                            icon: 'tempo'
+                            change: { value: 12, trend: 'up', comparison: 'comparado à semana passada' },
+                            icon: 'schedule'
                         },
                         {
                             id: '2',
                             label: 'Ciclos completos',
                             value: 6,
                             unit: 'ciclos',
-                            icon: 'ciclo'
+                            icon: 'donut_large'
                         },
                         {
                             id: '3',
                             label: 'Blocos estudados',
                             value: 48,
                             unit: 'blocos',
-                            icon: 'livros'
+                            icon: 'library_books'
                         },
                         {
                             id: '4',
                             label: 'Dias consecutivos',
                             value: 7,
                             unit: 'dias',
-                            icon: 'fogo'
+                            icon: 'local_fire_department'
                         }
                     ],
                     subjectTime: [

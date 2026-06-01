@@ -39,19 +39,19 @@ export function CreateCycleModal({
     onSelectTopics,
     onGenerate
 }: CreateCycleModalProps) {
-    const [hoursPerTopic, setHoursPerTopic] = useState(config.hoursPerTopic.toString());
-    const [minHoursPerTopic, setMinHoursPerTopic] = useState(config.minHoursPerTopic.toString());
+    const [minutesPerTopic, setMinutesPerTopic] = useState(config.minutesPerTopic.toString());
+    const [minMinutesPerTopic, setMinMinutesPerTopic] = useState(config.minMinutesPerTopic.toString());
 
     const handleGenerate = () => {
-        const max = parseFloat(hoursPerTopic);
-        const min = parseFloat(minHoursPerTopic);
+        const max = parseFloat(minutesPerTopic);
+        const min = parseFloat(minMinutesPerTopic);
 
         if (isNaN(max) || isNaN(min) || min > max) {
             alert('Valores inválidos');
             return;
         }
 
-        onUpdateConfig({ hoursPerTopic: max, minHoursPerTopic: min });
+        onUpdateConfig({ minutesPerTopic: max, minMinutesPerTopic: min });
         onGenerate();
         onClose();
     };
@@ -62,17 +62,30 @@ export function CreateCycleModal({
         }
     };
 
+    const handlePrev = () => {
+        if (currentStep === 2) {
+            onPrev();
+        }
+    };
+
     return (
         <Modal isOpen={isOpen} onClose={onClose} size="large" title="Criar Ciclo de Estudo">
             <div className={styles.container}>
-
-                <div className={styles.stepIndicator}>
-                    <div className={`${styles.step} ${currentStep >= 1 ? styles.active : ''}`}>
+                <div className={styles.stepSliderContainer}>
+                    <div
+                        className={`${styles.stepSlider} ${currentStep === 1 ? styles.stepLeft : styles.stepRight}`}
+                    />
+                    <div
+                        className={`${styles.stepOption} ${currentStep === 1 ? styles.active : ''}`}
+                        onClick={handleNext}
+                    >
                         <span className={styles.stepNumber}>1</span>
                         <span className={styles.stepLabel}>Configuração Básica</span>
                     </div>
-                    <div className={styles.stepLine} />
-                    <div className={`${styles.step} ${currentStep >= 2 ? styles.active : ''}`}>
+                    <div
+                        className={`${styles.stepOption} ${currentStep === 2 ? styles.active : ''}`}
+                        onClick={handlePrev}
+                    >
                         <span className={styles.stepNumber}>2</span>
                         <span className={styles.stepLabel}>Regras do Ciclo</span>
                     </div>
@@ -80,30 +93,29 @@ export function CreateCycleModal({
 
                 {currentStep === 1 && (
                     <>
-
                         <div className={styles.section}>
-                            <Text variant="label">Horas por tópico</Text>
+                            <Text variant="label">Tempo por tópico</Text>
                             <div className={styles.hoursRow}>
                                 <div className={styles.hoursField}>
-                                    <Text variant="caption">Máximo</Text>
+                                    <Text variant="caption">Máximo (minutos)</Text>
                                     <Input
                                         type="number"
-                                        value={hoursPerTopic}
-                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setHoursPerTopic(e.target.value)}
-                                        placeholder="Ex: 4"
+                                        value={minutesPerTopic}
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMinutesPerTopic(e.target.value)}
+                                        placeholder="Ex: 240"
                                         min="0"
-                                        step="0.5"
+                                        step="15"
                                     />
                                 </div>
                                 <div className={styles.hoursField}>
-                                    <Text variant="caption">Mínimo</Text>
+                                    <Text variant="caption">Mínimo (minutos)</Text>
                                     <Input
                                         type="number"
-                                        value={minHoursPerTopic}
-                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMinHoursPerTopic(e.target.value)}
-                                        placeholder="Ex: 1"
+                                        value={minMinutesPerTopic}
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMinMinutesPerTopic(e.target.value)}
+                                        placeholder="Ex: 60"
                                         min="0"
-                                        step="0.5"
+                                        step="15"
                                     />
                                 </div>
                             </div>
@@ -121,7 +133,6 @@ export function CreateCycleModal({
 
                 {currentStep === 2 && (
                     <>
-
                         <div className={styles.section}>
                             <Text variant="label">Regras de ordenação</Text>
                             <Text variant="caption" className={styles.rulesHint}>

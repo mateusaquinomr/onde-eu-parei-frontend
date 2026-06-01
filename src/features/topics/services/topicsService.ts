@@ -1,192 +1,124 @@
-import type { Topic, CreateTopicDTO } from '../types/topic.types';
+import api from '@/shared/services/api/api';
+import type { Topic, CreateTopicDTO, Content } from '../types/topic.types';
 
-let MOCK_TOPICS: Topic[] = [
-    {
-        id: '1',
-        name: 'Direito Constitucional',
-        notebookColor: 'azul',
-        difficulty: 'medio',
-        tags: [
-            { id: '1', label: 'direito' },
-            { id: '2', label: 'constituição' }
-        ],
-        contents: [
-            {
-                id: '1',
-                title: 'Art. 1º ao 4º - Princípios Fundamentais',
-                importance: 'muita',
-                completed: false,
-                order: 0,
-                createdAt: new Date()
-            },
-            {
-                id: '2',
-                title: 'Art. 5º - Direitos e Garantias',
-                importance: 'muita',
-                completed: true,
-                order: 1,
-                createdAt: new Date()
+const adaptTopic = (backendTopic: any): Topic => {
+    return {
+        ...backendTopic,
+        id: backendTopic._id || backendTopic.id,
+        contents: backendTopic.contents?.map((content: any) => ({
+            ...content,
+            id: content._id || content.id,
+            studyData: {
+                ...content.studyData,
+                totalTimeSpent: content.studyData?.totalTimeSpent || 0,
+                notes: content.studyData?.notes || '',
+                startedAt: content.studyData?.startedAt || null,
+                completedAt: content.studyData?.completedAt || null,
+                lastReviewDate: content.studyData?.lastReviewDate || null,
+                nextReviewDate: content.studyData?.nextReviewDate || null,
+                reviewHistory: content.studyData?.reviewHistory || [],
+                questionLists: content.studyData?.questionLists || []
             }
-        ],
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        lastAccessed: new Date(),
-        totalHours: 12.5
-    },
-    {
-        id: '2',
-        name: 'Direito Administrativo',
-        notebookColor: 'vermelho',
-        difficulty: 'dificil',
-        tags: [
-            { id: '3', label: 'administrativo' },
-            { id: '4', label: 'servidores' }
-        ],
-        contents: [
-            {
-                id: '3',
-                title: 'Princípios da Administração',
-                importance: 'normal',
-                completed: false,
-                order: 0,
-                createdAt: new Date()
-            }
-        ],
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        lastAccessed: new Date(),
-        totalHours: 8.0
-    }
-];
+        })) || []
+    };
+};
 
 export const topicsService = {
     async getAll(): Promise<Topic[]> {
-        await new Promise(resolve => setTimeout(resolve, 500));
-        return JSON.parse(JSON.stringify(MOCK_TOPICS));
+        const response = await api.get('/topics');
+        return response.data.map(adaptTopic);
     },
 
     async getById(id: string): Promise<Topic | undefined> {
-        await new Promise(resolve => setTimeout(resolve, 300));
-        const topic = MOCK_TOPICS.find(t => t.id === id);
-        return topic ? JSON.parse(JSON.stringify(topic)) : undefined;
+        const response = await api.get(`/topics/${id}`);
+        return adaptTopic(response.data);
     },
 
     async create(data: CreateTopicDTO): Promise<Topic> {
-        await new Promise(resolve => setTimeout(resolve, 800));
-        const now = new Date();
-        const newTopic: Topic = {
-            id: crypto.randomUUID(),
-            ...data,
-            contents: data.contents.map((c, index) => ({
-                id: crypto.randomUUID(),
-                ...c,
-                completed: false,
-                order: index,
-                createdAt: now
-            })),
-            createdAt: now,
-            updatedAt: now,
-            lastAccessed: now,
-            totalHours: 0
-        };
-        MOCK_TOPICS.push(newTopic);
-        return JSON.parse(JSON.stringify(newTopic));
+        const response = await api.post('/topics', data);
+        return adaptTopic(response.data);
     },
 
-    async update(id: string, data: Partial<CreateTopicDTO>): Promise<Topic> {
-        await new Promise(resolve => setTimeout(resolve, 800));
-        const index = MOCK_TOPICS.findIndex(t => t.id === id);
-        if (index === -1) throw new Error('Tópico não encontrado');
+    async createMultiple(topicsData: CreateTopicDTO[]): Promise<Topic[]> {
+        const topics = await Promise.all(
+            topicsData.map(data => this.create(data))
+        );
+        return topics;
+    },
 
-        const existingTopic = MOCK_TOPICS[index];
-
-        const updatedTopic: Topic = {
-            ...existingTopic,
-            ...data,
-
-            contents: data.contents
-                ? data.contents.map((newContent, idx) => {
-
-                    const existingContent = existingTopic.contents.find(ec => ec.title === newContent.title);
-                    return {
-                        id: existingContent?.id || crypto.randomUUID(),
-                        title: newContent.title,
-                        importance: newContent.importance,
-                        completed: existingContent?.completed || false,
-                        order: idx,
-                        createdAt: existingContent?.createdAt || new Date()
-                    };
-                })
-                : existingTopic.contents,
-            updatedAt: new Date()
-        };
-
-        MOCK_TOPICS[index] = updatedTopic;
-        console.log('Service - Tópico atualizado:', JSON.parse(JSON.stringify(updatedTopic)));
-        return JSON.parse(JSON.stringify(updatedTopic));
+    async update(id: string, data: Partial<Topic>): Promise<Topic> {
+        const response = await api.put(`/topics/${id}`, data);
+        return adaptTopic(response.data);
     },
 
     async delete(id: string): Promise<void> {
-        await new Promise(resolve => setTimeout(resolve, 500));
-        MOCK_TOPICS = MOCK_TOPICS.filter(t => t.id !== id);
+        await api.delete(`/topics/${id}`);
     },
-
 
     async updateLastAccessed(id: string): Promise<Topic> {
-        await new Promise(resolve => setTimeout(resolve, 300));
-        const index = MOCK_TOPICS.findIndex(t => t.id === id);
-        if (index === -1) throw new Error('Tópico não encontrado');
-
-        const updatedTopic = {
-            ...MOCK_TOPICS[index],
-            lastAccessed: new Date(),
-            updatedAt: new Date()
-        };
-
-        MOCK_TOPICS[index] = updatedTopic;
-        console.log(' Service - Último acesso atualizado:', updatedTopic.lastAccessed);
-        return JSON.parse(JSON.stringify(updatedTopic));
+        const response = await api.put(`/topics/${id}`, { lastAccessed: new Date() });
+        return adaptTopic(response.data);
     },
 
-    async addStudyHours(id: string, hours: number): Promise<Topic> {
-        await new Promise(resolve => setTimeout(resolve, 300));
-        const index = MOCK_TOPICS.findIndex(t => t.id === id);
-        if (index === -1) throw new Error('Tópico não encontrado');
-
-        const currentHours = MOCK_TOPICS[index].totalHours || 0;
-        const updatedTopic = {
-            ...MOCK_TOPICS[index],
-            totalHours: Number((currentHours + hours).toFixed(1)),
-            lastAccessed: new Date(),
-            updatedAt: new Date()
-        };
-
-        MOCK_TOPICS[index] = updatedTopic;
-        console.log(' Service - Horas adicionadas:', { horasAdicionadas: hours, totalHoras: updatedTopic.totalHours });
-        return JSON.parse(JSON.stringify(updatedTopic));
+    async addStudyMinutes(id: string, minutes: number): Promise<Topic> {
+        const response = await api.post(`/topics/${id}/study-minutes`, { minutes });
+        return adaptTopic(response.data);
     },
 
-    async registerStudySession(id: string, hoursStudied: number): Promise<Topic> {
-        await new Promise(resolve => setTimeout(resolve, 300));
-        const index = MOCK_TOPICS.findIndex(t => t.id === id);
-        if (index === -1) throw new Error('Tópico não encontrado');
+    async updateContentNotes(topicId: string, contentId: string, notes: string): Promise<Topic> {
+        const response = await api.put(`/topics/${topicId}/contents/${contentId}/notes`, { notes });
+        return adaptTopic(response.data);
+    },
 
-        const currentHours = MOCK_TOPICS[index].totalHours || 0;
-        const now = new Date();
+    async updateContentChecklist(topicId: string, contentId: string, checklist: Content['checklist']): Promise<Topic> {
+        const response = await api.put(`/topics/${topicId}/contents/${contentId}/checklist`, { checklist });
+        return adaptTopic(response.data);
+    },
 
-        const updatedTopic = {
-            ...MOCK_TOPICS[index],
-            totalHours: Number((currentHours + hoursStudied).toFixed(1)),
-            lastAccessed: now,
-            updatedAt: now
-        };
+    async updateContentQuestionLists(topicId: string, contentId: string, questionLists: any): Promise<Topic> {
+        const response = await api.put(`/topics/${topicId}/contents/${contentId}/questions`, { questionLists });
+        return adaptTopic(response.data);
+    },
 
-        MOCK_TOPICS[index] = updatedTopic;
-        console.log(' Service - Sessão de estudo registrada:', {
-            horasEstudadas: hoursStudied,
-            totalHoras: updatedTopic.totalHours,
-            ultimoAcesso: updatedTopic.lastAccessed
+    async markContentAsCompleted(topicId: string, contentId: string): Promise<Topic> {
+        const response = await api.put(`/topics/${topicId}/contents/${contentId}/complete`);
+        return adaptTopic(response.data);
+    },
+
+    async getCurrentContent(topicId: string): Promise<Content | null> {
+        const topic = await this.getById(topicId);
+        if (!topic) return null;
+
+        const pendingContent = topic.contents.find(c => !c.completed);
+        if (pendingContent) return pendingContent;
+
+        return topic.contents.length > 0 ? topic.contents[topic.contents.length - 1] : null;
+    },
+
+    async updateContentTime(topicId: string, contentId: string, additionalMinutes: number): Promise<Topic> {
+        const topic = await this.getById(topicId);
+        if (!topic) throw new Error('Tópico não encontrado');
+
+        const content = topic.contents.find(c => c.id === contentId);
+        if (!content) throw new Error('Conteúdo não encontrado');
+
+        const updatedContents = topic.contents.map(c =>
+            c.id === contentId
+                ? {
+                    ...c,
+                    studyData: {
+                        ...c.studyData,
+                        totalTimeSpent: (c.studyData?.totalTimeSpent || 0) + additionalMinutes,
+                        startedAt: c.studyData?.startedAt || new Date()
+                    }
+                }
+                : c
+        );
+
+        return this.update(topicId, {
+            contents: updatedContents,
+            totalMinutes: (topic.totalMinutes || 0) + additionalMinutes,
+            lastAccessed: new Date()
         });
-        return JSON.parse(JSON.stringify(updatedTopic));
     }
 };

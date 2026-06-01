@@ -14,14 +14,14 @@ export function BlocksEditView({ blocks, onChange }: BlocksEditViewProps) {
     const [selectedTopic, setSelectedTopic] = useState('');
     const [localBlocks, setLocalBlocks] = useState(blocks);
 
-    const topicHours = localBlocks.reduce((acc, block) => {
-        acc[block.topicName] = (acc[block.topicName] || 0) + block.hours;
+    const topicMinutes = localBlocks.reduce((acc, block) => {
+        acc[block.topicName] = (acc[block.topicName] || 0) + block.minutes;
         return acc;
     }, {} as Record<string, number>);
 
     const topicOptions = [
         { label: 'Selecione um tópico', value: '' },
-        ...Object.keys(topicHours).map(topicName => ({
+        ...Object.keys(topicMinutes).map(topicName => ({
             label: topicName,
             value: topicName
         }))
@@ -35,7 +35,7 @@ export function BlocksEditView({ blocks, onChange }: BlocksEditViewProps) {
             topicId: selectedTopic,
             topicName: selectedTopic,
             position: localBlocks.length,
-            hours: 1.0,
+            minutes: 60,
             completed: false
         };
 
@@ -74,12 +74,12 @@ export function BlocksEditView({ blocks, onChange }: BlocksEditViewProps) {
             </div>
 
             <div className={styles.section}>
-                <Text variant="label">Tópicos ({Object.keys(topicHours).length})</Text>
+                <Text variant="label">Tópicos ({Object.keys(topicMinutes).length})</Text>
                 <div className={styles.topicSummary}>
-                    {Object.entries(topicHours).map(([topicName, hours]) => (
+                    {Object.entries(topicMinutes).map(([topicName, minutes]) => (
                         <div key={topicName} className={styles.topicRow}>
                             <span className={styles.topicName}>{topicName}</span>
-                            <span className={styles.topicHours}>{hours.toFixed(1)}h</span>
+                            <span className={styles.topicMinutes}>{minutes}min</span>
                         </div>
                     ))}
                 </div>
@@ -92,7 +92,7 @@ export function BlocksEditView({ blocks, onChange }: BlocksEditViewProps) {
                         <div key={block.id} className={styles.block}>
                             <span className={styles.position}>#{index + 1}</span>
                             <span className={styles.topicName}>{block.topicName}</span>
-                            <span className={styles.hours}>{block.hours}h</span>
+                            <span className={styles.minutes}>{block.minutes}min</span>
                             <Button
                                 variant="ghost"
                                 icon={<span>✕</span>}

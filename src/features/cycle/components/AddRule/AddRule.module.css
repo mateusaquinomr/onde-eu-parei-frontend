@@ -5,34 +5,65 @@
 .row {
     display: flex;
     gap: 12px;
-    align-items: center;
+    align-items: flex-end;
     flex-wrap: wrap;
 }
 
 .field {
     flex: 2;
-    min-width: 180px;
+    min-width: 170px;
 }
 
 .operator {
     flex: 1;
-    min-width: 100px;
+    min-width: 160px;
 }
 
 .relation {
     flex: 1;
-    min-width: 100px;
+    min-width: 110px;
+}
+
+.buttonWrapper {
+    flex-shrink: 0;
+}
+
+.buttonWrapper button:disabled {
+    background-color: #9ca3af !important;
+    color: #e5e7eb !important;
+    cursor: not-allowed !important;
+    opacity: 0.6;
+    transform: none !important;
+}
+
+.buttonWrapper button:disabled:hover {
+    transform: none !important;
+    background-color: #9ca3af !important;
+}
+
+.field select,
+.operator select,
+.relation select {
+    width: 100%;
+    height: 40px;
 }
 
 @media (max-width: 768px) {
     .row {
         flex-direction: column;
         align-items: stretch;
+        gap: 12px;
     }
 
     .field,
     .operator,
-    .relation {
+    .relation,
+    .buttonWrapper {
+        width: 100%;
+        min-width: auto;
+    }
+
+    .buttonWrapper button {
         width: 100%;
     }
 }

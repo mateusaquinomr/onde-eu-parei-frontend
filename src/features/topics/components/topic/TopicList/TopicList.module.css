@@ -2,7 +2,7 @@
     display: flex;
     gap: 20px;
     overflow-x: auto;
-    padding: 16px 4px 24px 4px;
+    padding: 10px 4px 24px 4px;
     scrollbar-width: thin;
     scrollbar-color: #888 #f1f1f1;
 }
@@ -23,6 +23,23 @@
 
 .grid::-webkit-scrollbar-thumb:hover {
     background: #555;
+}
+
+.grid>* {
+    flex-shrink: 0;
+    width: 320px;
+}
+
+@media (max-width: 768px) {
+    .grid>* {
+        width: 280px;
+    }
+}
+
+@media (min-width: 1400px) {
+    .grid>* {
+        width: 360px;
+    }
 }
 
 .emptyState {

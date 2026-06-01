@@ -3,10 +3,9 @@
     align-items: center;
     justify-content: center;
     gap: var(--spacing-5-df);
-    padding-top: var(--spacing-10-sm);
-    padding-bottom: var(--spacing-10-sm);
+    padding: var(--spacing-10-sm);
     line-height: 1;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-full);
     border: none;
     cursor: pointer;
     transition: var(--transition-colors);
@@ -63,8 +62,8 @@
 
 .iconOnly {
     min-width: 0 !important;
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 2.5rem !important;
+    height: 2.5rem !important;
 
     /* display: inline-flex;
     align-items: center;

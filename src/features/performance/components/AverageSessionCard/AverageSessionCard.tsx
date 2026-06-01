@@ -5,11 +5,10 @@ import styles from './AverageSessionCard.module.css';
 interface AverageSessionCardProps {
     session: AverageSession;
 }
-
 export function AverageSessionCard({ session }: AverageSessionCardProps) {
     const getTrendIcon = () => {
         if (!session.trend) return '';
-        return session.trend > 0 ? '^' : 'v';
+        return session.trend > 0 ? 'trending_up' : 'trending_down';
     };
 
     const getTrendClass = () => {
@@ -29,9 +28,11 @@ export function AverageSessionCard({ session }: AverageSessionCardProps) {
 
                 {session.trend && (
                     <div className={`${styles.trend} ${getTrendClass()}`}>
-                        <span className={styles.trendIcon}>{getTrendIcon()}</span>
+                        <span className="material-icons" style={{ fontSize: '16px' }}>
+                            {getTrendIcon()}
+                        </span>
                         <span className={styles.trendValue}>{Math.abs(session.trend)}%</span>
-                        <span className={styles.trendLabel}>vs semana anterior</span>
+                        <span className={styles.trendLabel}>comparado à semana anterior</span>
                     </div>
                 )}
             </div>

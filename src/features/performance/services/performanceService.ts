@@ -42,8 +42,8 @@ class PerformanceService {
     }
 
     private calculateMetrics(cycles: Cycle[]): MetricData[] {
-        const totalHours = cycles.reduce((sum, cycle) => sum + cycle.totalHours, 0);
-        const totalCompletedHours = cycles.reduce((sum, cycle) => sum + cycle.completedHours, 0);
+        const totalHours = cycles.reduce((sum, cycle) => sum + cycle.totalMinutes, 0);
+        const totalCompletedHours = cycles.reduce((sum, cycle) => sum + cycle.completedMinutes, 0);
         const totalCycles = cycles.length;
         const totalBlocks = cycles.reduce((sum, cycle) => sum + cycle.blocks.length, 0);
 
@@ -98,7 +98,7 @@ class PerformanceService {
         cycles.forEach(cycle => {
             cycle.blocks.forEach(block => {
                 const current = subjectMap.get(block.topicName) || 0;
-                subjectMap.set(block.topicName, current + block.hours);
+                subjectMap.set(block.topicName, current + block.minutes);
             });
         });
 
@@ -127,7 +127,7 @@ class PerformanceService {
             const date = cycle.createdAt.toISOString().split('T')[0];
             if (last7Days.includes(date)) {
                 const current = daysMap.get(date) || 0;
-                daysMap.set(date, current + cycle.completedHours);
+                daysMap.set(date, current + cycle.completedMinutes);
             }
         });
 
@@ -188,7 +188,7 @@ class PerformanceService {
             const date = cycle.createdAt.toISOString().split('T')[0];
             if (last35Days.includes(date)) {
                 const current = studyMap.get(date) || 0;
-                studyMap.set(date, current + cycle.completedHours);
+                studyMap.set(date, current + cycle.completedMinutes);
             }
         });
 
@@ -241,7 +241,7 @@ class PerformanceService {
     }
 
     private calculateAverageSession(cycles: Cycle[]): AverageSession {
-        const totalHours = cycles.reduce((sum, cycle) => sum + cycle.completedHours, 0);
+        const totalHours = cycles.reduce((sum, cycle) => sum + cycle.completedMinutes, 0);
         const totalSessions = cycles.reduce((sum, cycle) => sum + cycle.blocks.length, 0);
 
         const average = totalSessions > 0
@@ -346,7 +346,7 @@ class PerformanceService {
 
         return cycles
             .filter(c => new Date(c.createdAt) >= lastWeek)
-            .reduce((sum, c) => sum + c.completedHours, 0);
+            .reduce((sum, c) => sum + c.completedMinutes, 0);
     }
 
     private getPreviousWeekHours(cycles: Cycle[]): number {
@@ -360,7 +360,7 @@ class PerformanceService {
                 const date = new Date(c.createdAt);
                 return date >= twoWeeksAgo && date < lastWeek;
             })
-            .reduce((sum, c) => sum + c.completedHours, 0);
+            .reduce((sum, c) => sum + c.completedMinutes, 0);
     }
 
     private formatHours(totalHours: number): string {

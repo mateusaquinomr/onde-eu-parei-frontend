@@ -9,9 +9,9 @@ interface InsightsPanelProps {
 export function InsightsPanel({ insights }: InsightsPanelProps) {
     const getIcon = (type: Insight['type']) => {
         switch (type) {
-            case 'positive': return 'ok';
-            case 'alert': return 'alerta';
-            default: return 'lâmpada';
+            case 'positive': return 'emoji_events';
+            case 'alert': return 'warning';
+            default: return 'lightbulb';
         }
     };
 
@@ -30,7 +30,9 @@ export function InsightsPanel({ insights }: InsightsPanelProps) {
             <div className={styles.insightsList}>
                 {insights.map(insight => (
                     <div key={insight.id} className={`${styles.insight} ${getClassName(insight.type)}`}>
-                        <span className={styles.icon}>{getIcon(insight.type)}</span>
+                        <span className={`${styles.icon} material-icons-outlined`}>
+                            {getIcon(insight.type)}
+                        </span>
                         <div className={styles.content}>
                             <Text variant="body">{insight.message}</Text>
                             {insight.detail && (

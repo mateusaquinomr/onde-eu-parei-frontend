@@ -20,25 +20,33 @@ import {
 } from '@dnd-kit/modifiers';
 import { Text } from '@/shared/components/ui/Text/Text';
 import { SortableContentItem } from '../SortableContentItem/SortableContentItem';
-import type { Content, ImportanceLevel } from '../../../types/topic.types';
+import type { Content, ImportanceLevel, ChecklistItem, QuestionList } from '../../../types/topic.types';
 import styles from './ContentList.module.css';
 
 interface ContentListProps {
+    topicId: string;
     contents: Content[];
     isEditing: boolean;
     onToggleComplete: (contentId: string) => void;
     onUpdateContent: (id: string, title: string, importance: ImportanceLevel) => void;
     onDeleteContent: (contentId: string) => void;
     onReorder: (contents: Content[]) => void;
+    onUpdateChecklist: (contentId: string, items: ChecklistItem[]) => void;
+    onUpdateNotes: (contentId: string, notes: string) => void;
+    onUpdateQuestions?: (contentId: string, lists: QuestionList[]) => void;
 }
 
 export function ContentList({
+    topicId,
     contents,
     isEditing,
     onToggleComplete,
     onUpdateContent,
     onDeleteContent,
-    onReorder
+    onReorder,
+    onUpdateChecklist,
+    onUpdateNotes,
+    onUpdateQuestions
 }: ContentListProps) {
     const [editingId, setEditingId] = useState<string | null>(null);
 
@@ -109,6 +117,7 @@ export function ContentList({
                             <SortableContentItem
                                 key={content.id}
                                 content={content}
+                                topicId={topicId}
                                 index={content.order + 1}
                                 isEditing={editingId === content.id}
                                 onEdit={() => setEditingId(content.id)}
@@ -119,6 +128,9 @@ export function ContentList({
                                 onCancel={() => setEditingId(null)}
                                 onDelete={() => handleDeleteContent(content.id)}
                                 onToggleComplete={() => handleToggleComplete(content.id)}
+                                onUpdateChecklist={onUpdateChecklist}
+                                onUpdateNotes={onUpdateNotes}
+                                onUpdateQuestions={onUpdateQuestions}
                                 showDragHandle={isEditing}
                             />
                         ))}

@@ -49,6 +49,7 @@ export function CyclePage() {
                     {currentCycle && (
                         <ConfigCard
                             cycle={currentCycle}
+                            topics={topics}
                             onReconfigure={openConfigModal}
                         />
                     )}
@@ -63,7 +64,7 @@ export function CyclePage() {
                     ) : (
                         <div className={styles.emptyWidget}>
                             <div className={styles.emptyContent}>
-                                <span className={styles.emptyIcon}>books</span>
+                                <span className={`${styles.emptyIcon} material-icons`}>book</span>
                                 <Text variant="body">
                                     Nenhum ciclo ativo
                                 </Text>

@@ -10,9 +10,9 @@ export function MetricCard({ metric }: MetricCardProps) {
     const getTrendIcon = () => {
         if (!metric.change) return null;
         switch (metric.change.trend) {
-            case 'up': return '^';
-            case 'down': return 'v';
-            default: return '.';
+            case 'up': return 'trending_up';
+            case 'down': return 'trending_down';
+            default: return 'trending_flat';
         }
     };
 
@@ -27,7 +27,11 @@ export function MetricCard({ metric }: MetricCardProps) {
 
     return (
         <div className={styles.card}>
-            {metric.icon && <span className={styles.icon}>{metric.icon}</span>}
+            {metric.icon && (
+                <span className={`${styles.icon} material-icons-outlined`}>
+                    {metric.icon}
+                </span>
+            )}
 
             <div className={styles.content}>
                 <Text variant="caption" className={styles.label}>
@@ -42,9 +46,13 @@ export function MetricCard({ metric }: MetricCardProps) {
 
                     {metric.change && (
                         <div className={`${styles.trend} ${getTrendColor()}`}>
-                            <span className={styles.trendIcon}>{getTrendIcon()}</span>
+                            <span className="material-icons" style={{ fontSize: '14px' }}>
+                                {getTrendIcon()}
+                            </span>
                             <span className={styles.trendValue}>{metric.change.value}%</span>
-                            <span className={styles.trendComparison}>{metric.change.comparison}</span>
+                            <Text variant="caption" className={styles.trendComparison}>
+                                {metric.change.comparison}
+                            </Text>
                         </div>
                     )}
                 </div>

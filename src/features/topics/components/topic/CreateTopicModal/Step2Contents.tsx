@@ -23,7 +23,7 @@ import { Input } from '@/shared/components/ui/Form/Input';
 import { Select } from '@/shared/components/ui/Form/Select';
 import { Button } from '@/shared/components/ui/Button/Button';
 import { Text } from '@/shared/components/ui/Text/Text';
-import { SortableContentItem } from '../SortableContentItem/SortableContentItem.tsx';
+import { SortableContentItem } from '../SortableContentItem/SortableContentItem';
 import type { ImportanceLevel, Content } from '../../../types/topic.types';
 import styles from './CreateTopicModal.module.css';
 
@@ -39,11 +39,22 @@ const importanceOptions = [
     { label: 'Muito importante', value: 'muita' }
 ];
 
+const createDefaultStudyData = () => ({
+    totalTimeSpent: 0,
+    notes: '',
+    startedAt: null,
+    completedAt: null,
+    lastReviewDate: null,
+    nextReviewDate: null,
+    reviewHistory: []
+});
+
 export function Step2Contents({ initialContents = [], onSave, onBack }: Step2ContentsProps) {
     const [contents, setContents] = useState<Content[]>(initialContents);
     const [newContentTitle, setNewContentTitle] = useState('');
     const [newContentImportance, setNewContentImportance] = useState<ImportanceLevel>('normal');
     const [editingId, setEditingId] = useState<string | null>(null);
+    const tempTopicId = 'temp-topic-id';
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
@@ -65,7 +76,9 @@ export function Step2Contents({ initialContents = [], onSave, onBack }: Step2Con
             importance: newContentImportance,
             completed: false,
             order: contents.length,
-            createdAt: new Date()
+            createdAt: new Date(),
+            checklist: [],
+            studyData: createDefaultStudyData()
         };
 
         setContents([...contents, content]);
@@ -88,6 +101,14 @@ export function Step2Contents({ initialContents = [], onSave, onBack }: Step2Con
             c.id === id ? { ...c, title, importance } : c
         ));
         setEditingId(null);
+    };
+
+    const handleUpdateChecklist = () => {
+
+    };
+
+    const handleUpdateNotes = () => {
+
     };
 
     const handleDragEnd = (event: DragEndEvent) => {
@@ -167,6 +188,7 @@ export function Step2Contents({ initialContents = [], onSave, onBack }: Step2Con
                                         <SortableContentItem
                                             key={content.id}
                                             content={content}
+                                            topicId={tempTopicId}
                                             index={index + 1}
                                             isEditing={editingId === content.id}
                                             onEdit={() => setEditingId(content.id)}
@@ -174,6 +196,9 @@ export function Step2Contents({ initialContents = [], onSave, onBack }: Step2Con
                                             onCancel={() => setEditingId(null)}
                                             onDelete={() => removeContent(content.id)}
                                             onToggleComplete={() => toggleComplete(content.id)}
+                                            onUpdateChecklist={handleUpdateChecklist}
+                                            onUpdateNotes={handleUpdateNotes}
+                                            showDragHandle={true}
                                         />
                                     ))}
                             </div>

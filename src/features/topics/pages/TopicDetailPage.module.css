@@ -1,6 +1,6 @@
 .container {
-
-    padding: 24px;
+    padding: 0px;
+    padding-left: 24px;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -89,7 +89,6 @@
 
 .statValue {
     font-size: 16px;
-    /* font-weight: 600; */
     color: #1f2937;
     margin: 0;
     line-height: 1.3;
@@ -218,6 +217,82 @@
     gap: 16px;
 }
 
+.statValueWrapper {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.menuContainer {
+    position: relative;
+}
+
+.menuButton {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    color: #6b7280;
+}
+
+.menuButton:hover {
+    background-color: #f3f4f6;
+}
+
+.menuButton .material-icons {
+    font-size: 24px;
+}
+
+.menuDropdown {
+    position: absolute;
+    top: 45px;
+    right: 0;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    min-width: 180px;
+    z-index: 100;
+    overflow: hidden;
+}
+
+.menuItem {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    width: 100%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.875rem;
+    color: #1f2937;
+    transition: background-color 0.2s;
+    text-align: left;
+}
+
+.menuItem:hover {
+    background-color: #f3f4f6;
+}
+
+.menuItem .material-icons {
+    font-size: 18px;
+}
+
+.deleteItem {
+    color: #ef4444;
+}
+
+.deleteItem:hover {
+    background-color: #fee2e2;
+}
+
 @media (max-width: 768px) {
     .twoColumnLayout {
         grid-template-columns: 1fr;
@@ -303,6 +378,32 @@
 
     .statLabel {
         color: #9ca3af;
+    }
+
+    /* Menu dark mode */
+    .menuButton:hover {
+        background-color: #374151;
+    }
+
+    .menuDropdown {
+        background: #1f2937;
+        border-color: #4b5563;
+    }
+
+    .menuItem {
+        color: #f3f4f6;
+    }
+
+    .menuItem:hover {
+        background-color: #374151;
+    }
+
+    .deleteItem {
+        color: #f87171;
+    }
+
+    .deleteItem:hover {
+        background-color: #7f1d1d;
     }
 
     @media (max-width: 768px) {

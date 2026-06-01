@@ -1,0 +1,89 @@
+.widget {
+    background: var(--color-bg-primary, #ffffff);
+    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 0.8rem;
+}
+
+.widgetHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1rem 0.1rem 1rem;
+}
+
+.widget.default {
+    background: var(--color-bg-primary, #ffffff);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.widget.primary {
+    background: var(--color-primary, #3b82f6);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+.widget.primary .widgetTitle {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.widget.secondary {
+    background: var(--color-secondary-subtle, #fef3c7);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.widget.secondary .widgetTitle {
+    color: var(--color-secondary, #d97706);
+}
+
+.widget.transparent {
+    background: transparent;
+    box-shadow: none;
+}
+
+.widget.none {
+    background: transparent;
+    box-shadow: none;
+}
+
+.widget.none .widgetHeader {
+    padding: 0 0 0.5rem 0;
+}
+
+.widget.none .widgetContent {
+    padding: 0;
+}
+
+.widgetTitle {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-secondary, #6b7280);
+    letter-spacing: 0.5px;
+    margin: 0;
+}
+
+.widgetAction {
+    flex-shrink: 0;
+}
+
+.widgetContent {
+    flex: 1;
+    padding: 0rem 1rem 1rem 1rem;
+}
+
+@media (prefers-color-scheme: dark) {
+    .widget.default {
+        background: var(--color-bg-secondary, #1f2937);
+    }
+
+    .widget.secondary {
+        background: rgba(245, 158, 11, 0.15);
+    }
+
+    .widgetTitle {
+        color: var(--color-text-tertiary, #9ca3af);
+    }
+}

@@ -34,20 +34,32 @@ export function useTopics() {
         }
     };
 
-    const updateTopic = async (id: string, topicData: Partial<CreateTopicDTO>) => {
+    const createMultipleTopics = async (topicsData: CreateTopicDTO[]) => {
         try {
-            console.log('🟣 useTopics - updateTopic chamado', { id, topicData });
+            setLoading(true);
+            const newTopics: Topic[] = [];
+
+            for (const topicData of topicsData) {
+                const newTopic = await topicsService.create(topicData);
+                newTopics.push(newTopic);
+            }
+
+            setTopics(prev => [...prev, ...newTopics]);
+            return newTopics;
+        } catch (err) {
+            setError(err as Error);
+            throw err;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const updateTopic = async (id: string, topicData: Partial<Topic>) => {
+        try {
             const updatedTopic = await topicsService.update(id, topicData);
-            console.log('🟣 useTopics - updatedTopic recebido', updatedTopic);
-
-            setTopics(prevTopics => {
-                const newTopics = prevTopics.map(t =>
-                    t.id === id ? updatedTopic : t
-                );
-                console.log('🟣 useTopics - novo estado topics:', newTopics);
-                return newTopics;
-            });
-
+            setTopics(prevTopics => prevTopics.map(t =>
+                t.id === id ? updatedTopic : t
+            ));
             return updatedTopic;
         } catch (err) {
             setError(err as Error);
@@ -78,9 +90,9 @@ export function useTopics() {
         }
     };
 
-    const addStudyHours = async (id: string, hours: number) => {
+    const addStudyMinutes = async (id: string, minutes: number) => {
         try {
-            const updatedTopic = await topicsService.addStudyHours(id, hours);
+            const updatedTopic = await topicsService.addStudyMinutes(id, minutes);
             setTopics(prevTopics => prevTopics.map(t =>
                 t.id === id ? updatedTopic : t
             ));
@@ -96,10 +108,11 @@ export function useTopics() {
         loading,
         error,
         createTopic,
+        createMultipleTopics,
         updateTopic,
         deleteTopic,
         updateLastAccessed,
-        addStudyHours,
+        addStudyMinutes,
         refresh: loadTopics
     };
 }

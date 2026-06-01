@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Text } from '@/shared/components/ui/Text/Text';
 import { Button } from '@/shared/components/ui/Button/Button';
 import { Input } from '@/shared/components/ui/Form/Input';
@@ -9,7 +9,7 @@ import { EditableMetadata } from '@/shared/components/ui/EditableMetadata/Editab
 import { useTopics } from '../hooks/useTopics';
 import { ContentList } from '../components/topic/ContentList/ContentList';
 import { CircularProgress } from '../components/topic/CircularProgress/CircularProgress';
-import type { Content, ImportanceLevel, NotebookColor, DifficultyLevel } from '../types/topic.types';
+import type { Content, ImportanceLevel, NotebookColor, DifficultyLevel, ChecklistItem, QuestionList } from '../types/topic.types';
 import styles from './TopicDetailPage.module.css';
 
 const importanceOptions = [
@@ -20,17 +20,34 @@ const importanceOptions = [
 
 export function TopicDetailPage() {
     const { id } = useParams<{ id: string }>();
-    const { topics, loading, updateTopic, updateLastAccessed } = useTopics();
+    const navigate = useNavigate();
+    const { topics, loading, updateTopic, updateLastAccessed, deleteTopic } = useTopics();
     const topic = topics.find(t => t.id === id);
     const [showAddContent, setShowAddContent] = useState(false);
     const [newContentTitle, setNewContentTitle] = useState('');
     const [newContentImportance, setNewContentImportance] = useState<ImportanceLevel>('normal');
+    const [showMenu, setShowMenu] = useState(false);
 
     useEffect(() => {
         if (id && topic) {
             updateLastAccessed(id);
         }
     }, [id, topic, updateLastAccessed]);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (showMenu) {
+                const menu = document.querySelector(`.${styles.menuDropdown}`);
+                const button = document.querySelector(`.${styles.menuButton}`);
+                if (menu && !menu.contains(event.target as Node) && button && !button.contains(event.target as Node)) {
+                    setShowMenu(false);
+                }
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [showMenu]);
 
     if (loading) {
         return <div className={styles.loading}>Carregando...</div>;
@@ -40,7 +57,7 @@ export function TopicDetailPage() {
         return (
             <div className={styles.notFound}>
                 <Text variant="body">Tópico não encontrado</Text>
-                <Button variant="primary" onClick={() => window.history.back()}>
+                <Button variant="primary" onClick={() => navigate('/topics')}>
                     Voltar
                 </Button>
             </div>
@@ -54,7 +71,16 @@ export function TopicDetailPage() {
         : 0;
 
     const handleGoBack = () => {
-        window.history.back();
+        navigate('/topics');
+    };
+
+    const handleDeleteTopic = async () => {
+        const confirmed = window.confirm(`Tem certeza que deseja deletar o tópico "${topic.name}"? Esta ação não pode ser desfeita.`);
+        if (confirmed) {
+            await deleteTopic(topic.id);
+            navigate('/topics');
+        }
+        setShowMenu(false);
     };
 
     const handleToggleComplete = (contentId: string) => {
@@ -92,16 +118,64 @@ export function TopicDetailPage() {
         updateTopic(topic.id, { difficulty });
     };
 
+    const handleUpdateChecklist = (contentId: string, items: ChecklistItem[]) => {
+        const updatedContents = topic.contents.map(c =>
+            c.id === contentId ? { ...c, checklist: items } : c
+        );
+        updateTopic(topic.id, { contents: updatedContents });
+    };
+
+    const handleUpdateNotes = (contentId: string, notes: string) => {
+        const updatedContents = topic.contents.map(c =>
+            c.id === contentId
+                ? {
+                    ...c,
+                    studyData: {
+                        ...c.studyData,
+                        notes
+                    }
+                }
+                : c
+        );
+        updateTopic(topic.id, { contents: updatedContents });
+    };
+
+    const handleUpdateQuestions = (contentId: string, questionLists: QuestionList[]) => {
+        const updatedContents = topic.contents.map(c =>
+            c.id === contentId
+                ? {
+                    ...c,
+                    studyData: {
+                        ...c.studyData,
+                        questionLists
+                    }
+                }
+                : c
+        );
+        updateTopic(topic.id, { contents: updatedContents });
+    };
+
     const handleAddContent = () => {
         if (!newContentTitle.trim()) return;
 
         const newContent: Content = {
-            id: Date.now().toString(),
+            id: crypto.randomUUID(),
             title: newContentTitle,
             importance: newContentImportance,
             completed: false,
             order: topic.contents.length,
-            createdAt: new Date()
+            createdAt: new Date(),
+            checklist: [],
+            studyData: {
+                totalTimeSpent: 0,
+                notes: '',
+                startedAt: null,
+                completedAt: null,
+                lastReviewDate: null,
+                nextReviewDate: null,
+                reviewHistory: [],
+                questionLists: []
+            }
         };
 
         const updatedContents = [...topic.contents, newContent];
@@ -116,13 +190,10 @@ export function TopicDetailPage() {
         if (!date) return 'Nunca';
 
         try {
-
             const dateObj = typeof date === 'string' ? new Date(date) : date;
-
             if (!(dateObj instanceof Date) || isNaN(dateObj.getTime())) {
                 return 'Data inválida';
             }
-
             return dateObj.toLocaleDateString('pt-BR', {
                 day: '2-digit',
                 month: '2-digit',
@@ -173,18 +244,39 @@ export function TopicDetailPage() {
 
     return (
         <div className={styles.container}>
-
             <div className={styles.header}>
                 <div className={styles.breadcrumb}>
                     <Button
                         variant="ghost"
-                        icon={<span>←</span>}
+                        icon={<span className="material-icons">arrow_back</span>}
                         onClick={handleGoBack}
                         className={styles.backButton}
                     />
                     <Text variant="caption" className={styles.breadcrumbText}>
                         Tópicos
                     </Text>
+                </div>
+
+                <div className={styles.menuContainer}>
+                    <button
+                        className={styles.menuButton}
+                        onClick={() => setShowMenu(!showMenu)}
+                        aria-label="Opções"
+                    >
+                        <span className="material-icons">more_vert</span>
+                    </button>
+
+                    {showMenu && (
+                        <div className={styles.menuDropdown}>
+                            <button
+                                className={`${styles.menuItem} ${styles.deleteItem}`}
+                                onClick={handleDeleteTopic}
+                            >
+                                <span className="material-icons">delete</span>
+                                Deletar tópico
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -197,9 +289,7 @@ export function TopicDetailPage() {
             </div>
 
             <div className={styles.twoColumnLayout}>
-
                 <div className={styles.leftColumn}>
-
                     <div className={styles.progressCard}>
                         <CircularProgress
                             progress={progress}
@@ -209,26 +299,29 @@ export function TopicDetailPage() {
                             strokeWidth={8}
                         />
 
-
                         <div className={styles.progressStats}>
                             <div className={styles.statItem}>
-                                <Text variant="caption" className={styles.statLabel}>
-                                    último acesso
-                                </Text>
+                                <div className={styles.statValueWrapper}>
+                                    <span className="material-icons" style={{ fontSize: '14px', color: '#9CA3AF' }}>event</span>
+                                    <Text variant="caption" className={styles.statLabel}>
+                                        último acesso
+                                    </Text>
+                                </div>
                                 <Text variant="cardSectionTitle" className={styles.statValue}>
                                     {formatLastAccessed(topic.lastAccessed)}
                                 </Text>
-
                             </div>
 
                             <div className={styles.statItem}>
-                                <Text variant="caption" className={styles.statLabel}>
-                                    horas totais
-                                </Text>
+                                <div className={styles.statValueWrapper}>
+                                    <span className="material-icons" style={{ fontSize: '14px', color: '#9CA3AF' }}>schedule</span>
+                                    <Text variant="caption" className={styles.statLabel}>
+                                        horas totais
+                                    </Text>
+                                </div>
                                 <Text variant="cardSectionTitle" className={styles.statValue}>
-                                    {formatTotalHours(topic.totalHours)}h
+                                    {formatTotalHours(topic.totalMinutes)}h
                                 </Text>
-
                             </div>
                         </div>
                     </div>
@@ -267,10 +360,10 @@ export function TopicDetailPage() {
                         <Text variant="cardTitle">Conteúdos</Text>
                         <Button
                             variant="primary"
-                            // icon={<span>+</span>}
+                            icon={<span className="material-icons">add</span>}
                             onClick={() => setShowAddContent(!showAddContent)}
                         >
-                            {showAddContent ? 'Cancelar' : '+ Conteúdo'}
+                            {showAddContent ? 'Cancelar' : 'Conteúdo'}
                         </Button>
                     </div>
 
@@ -298,7 +391,7 @@ export function TopicDetailPage() {
                                 <Button
                                     type="button"
                                     variant="secondary"
-                                    icon={<span>+</span>}
+                                    icon={<span className="material-icons">add</span>}
                                     onClick={handleAddContent}
                                     disabled={!newContentTitle.trim()}
                                 />
@@ -307,12 +400,16 @@ export function TopicDetailPage() {
                     )}
 
                     <ContentList
+                        topicId={topic.id}
                         contents={topic.contents}
                         isEditing={true}
                         onToggleComplete={handleToggleComplete}
                         onUpdateContent={handleUpdateContent}
                         onDeleteContent={handleDeleteContent}
                         onReorder={handleReorderContents}
+                        onUpdateChecklist={handleUpdateChecklist}
+                        onUpdateNotes={handleUpdateNotes}
+                        onUpdateQuestions={handleUpdateQuestions}
                     />
                 </div>
             </div>

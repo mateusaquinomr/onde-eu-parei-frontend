@@ -13,8 +13,8 @@ export interface CycleRule {
 }
 
 export interface CycleConfig {
-    hoursPerTopic: number;
-    minHoursPerTopic: number;
+    minutesPerTopic: number;
+    minMinutesPerTopic: number;
     selectedTopics: string[];
     rules: CycleRule[];
 }
@@ -24,9 +24,11 @@ export interface CycleBlock {
     topicId: string;
     topicName: string;
     position: number;
-    hours: number;
+    minutes: number;
+    originalMinutes?: number;
     completed: boolean;
     completedAt?: Date;
+    currentContent?: string;
 }
 
 export interface Cycle {
@@ -34,9 +36,9 @@ export interface Cycle {
     number: number;
     config: CycleConfig;
     blocks: CycleBlock[];
-    totalHours: number;
-    completedHours: number;
-    remainingHours: number;
+    totalMinutes: number;
+    completedMinutes: number;
+    remainingMinutes: number;
     createdAt: Date;
     updatedAt: Date;
     startedAt?: Date;
@@ -46,7 +48,7 @@ export interface Cycle {
 
 export interface CycleSummary {
     totalCycles: number;
-    totalStudyHours: number;
+    totalStudyMinutes: number;
     currentCycle: Cycle | null;
 }
 

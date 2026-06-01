@@ -1,0 +1,36 @@
+.layout {
+    min-height: 100vh;
+    background-color: #0d0d0d;
+}
+
+.mainContent {
+    margin-left: 88px;
+    margin-top: 72px;
+    padding: 2rem;
+    min-height: calc(100vh - 72px);
+    width: calc(100% - 88px);
+    max-width: 100%;
+}
+
+@media (min-width: 1600px) {
+    .mainContent {
+        padding: 2rem 3rem;
+    }
+}
+
+.mainContentAlt {
+    margin-left: 88px;
+    margin-top: 72px;
+    padding: 2rem;
+    min-height: calc(100vh - 72px);
+    max-width: 1600px;
+    margin-right: auto;
+}
+
+@media (max-width: 768px) {
+    .mainContent {
+        margin-left: 0;
+        width: 100%;
+        padding: 1rem;
+    }
+}

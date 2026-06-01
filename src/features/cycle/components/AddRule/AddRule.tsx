@@ -6,14 +6,14 @@ import type { CycleRule, LogicalOperator, TimeRelation } from '../../types/cycle
 import styles from './AddRule.module.css';
 
 const logicalOperatorOptions = [
-    { label: 'deve', value: 'deve' },
-    { label: 'não deve', value: 'não deve' }
+    { label: 'deve estar', value: 'deve' },
+    { label: 'não deve estar', value: 'não deve' }
 ];
 
 const timeRelationOptions = [
-    { label: 'antes', value: 'antes' },
-    { label: 'depois', value: 'depois' },
-    { label: 'entre', value: 'entre' }
+    { label: 'antes de', value: 'antes' },
+    { label: 'depois de', value: 'depois' }
+    // { label: 'entre', value: 'entre' }
 ];
 
 interface AddRuleProps {
@@ -56,6 +56,7 @@ export function AddRule({ topics, onAdd }: AddRuleProps) {
                         value={topic1}
                         onChange={(val) => setTopic1(val)}
                         options={topicOptions}
+
                     />
                 </div>
 
@@ -80,16 +81,19 @@ export function AddRule({ topics, onAdd }: AddRuleProps) {
                         value={topic2}
                         onChange={(val) => setTopic2(val)}
                         options={topicOptions}
+
                     />
                 </div>
 
-                <Button
-                    variant="primary"
-                    onClick={handleAdd}
-                    disabled={!topic1 || !topic2}
-                >
-                    Add
-                </Button>
+                <div className={styles.buttonWrapper}>
+                    <Button
+                        variant="primary"
+                        onClick={handleAdd}
+                        disabled={!topic1 || !topic2}
+                    >
+                        Adicionar
+                    </Button>
+                </div>
             </div>
         </div>
     );

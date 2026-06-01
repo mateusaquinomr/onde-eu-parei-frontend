@@ -1,0 +1,373 @@
+.dashboard {
+    display: grid;
+    grid-template-columns: 490px minmax(380px, 410px) 280px;
+    gap: 1.5rem;
+    min-height: 100%;
+    align-items: start;
+}
+
+.leftColumn {
+    position: sticky;
+    top: calc(72px + 1.5rem);
+    width: 100%;
+}
+
+.centerColumn {
+    width: 100%;
+}
+
+.centerColumnFull {
+    grid-column: 1 / -1;
+    width: 100%;
+    max-width: 100%;
+    padding: 0 1rem;
+}
+
+.rightColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    position: sticky;
+    top: calc(72px + 1.5rem);
+}
+
+.emptyState {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1rem;
+    text-align: center;
+    color: var(--color-text-tertiary, #9ca3af);
+}
+
+.emptyState p {
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+.emptyCard {
+    background: var(--color-bg-primary, #ffffff);
+    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+}
+
+.setupSteps {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    gap: 2rem;
+    padding: 2rem;
+    flex-direction: row;
+    width: 100%;
+}
+
+.step {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    flex: 1;
+    min-width: 250px;
+    max-width: 350px;
+}
+
+.stepNumber {
+    width: 48px;
+    height: 48px;
+    background: var(--color-primary, #3b82f6);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.stepContent {
+    flex: 1;
+    min-width: 0;
+}
+
+.stepTitle {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--color-text-primary, #1f2937);
+}
+
+.stepDescription {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary, #6b7280);
+    margin-bottom: 1rem;
+    line-height: 1.4;
+}
+
+.stepSeparator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--color-text-tertiary, #9ca3af);
+}
+
+.stepSeparator .material-icons {
+    font-size: 2rem;
+}
+
+.step button {
+    width: 100%;
+}
+
+.setupCycleCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+    gap: 1rem;
+}
+
+.setupCycleIcon {
+    width: 80px;
+    height: 80px;
+    background: var(--color-primary-light, #eff6ff);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.setupCycleIcon .material-icons {
+    font-size: 40px;
+    color: var(--color-primary, #3b82f6);
+}
+
+.setupCycleTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text-primary, #1f2937);
+    margin: 0;
+}
+
+.setupCycleDescription {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary, #6b7280);
+    max-width: 300px;
+    margin: 0;
+}
+
+.placeholderCard {
+    background: var(--color-bg-primary, #ffffff);
+    border-radius: 16px;
+    padding: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    height: 160px;
+}
+
+.placeholderSkeleton {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+            var(--color-bg-secondary, #f3f4f6) 0%,
+            var(--color-border-muted, #e5e7eb) 50%,
+            var(--color-bg-secondary, #f3f4f6) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 12px;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+@media (min-width: 1440px) {
+    .dashboard {
+        grid-template-columns: 480px minmax(420px, 520px) 320px;
+        gap: 2rem;
+    }
+
+    .setupSteps {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+}
+
+@media (min-width: 1200px) and (max-width: 1440px) {
+    .dashboard {
+        grid-template-columns: 460px minmax(380px, 480px) 280px;
+        gap: 1.5rem;
+    }
+}
+
+@media (min-width: 1024px) and (max-width: 1200px) {
+    .dashboard {
+        grid-template-columns: 460px minmax(340px, 480px) 260px;
+        gap: 1.25rem;
+    }
+}
+
+@media (max-width: 1024px) {
+    .dashboard {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .leftColumn {
+        position: static;
+    }
+
+    .rightColumn {
+        position: static;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+
+    .setupSteps {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard {
+        gap: 1rem;
+    }
+
+    .centerColumn {
+        min-width: auto;
+        max-width: 100%;
+    }
+
+    .rightColumn {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.75rem;
+    }
+
+    .setupSteps {
+        flex-direction: column;
+        gap: 1.5rem;
+        align-items: center;
+    }
+
+    .stepSeparator {
+        transform: rotate(90deg);
+    }
+
+    .step {
+        width: 100%;
+        max-width: 400px;
+    }
+
+    .centerColumnFull {
+        padding: 0 1rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .rightColumn {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .rightColumn {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    .placeholderCard {
+        height: 140px;
+    }
+
+    .stepNumber {
+        width: 40px;
+        height: 40px;
+        font-size: 1.25rem;
+    }
+
+    .stepTitle {
+        font-size: 1rem;
+    }
+
+    .setupCycleIcon {
+        width: 60px;
+        height: 60px;
+    }
+
+    .setupCycleIcon .material-icons {
+        font-size: 30px;
+    }
+
+    .setupCycleTitle {
+        font-size: 1.125rem;
+    }
+
+    .step {
+        min-width: auto;
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .setupSteps {
+        padding: 1rem;
+    }
+
+    .step {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .stepContent {
+        text-align: center;
+    }
+
+    .stepDescription {
+        text-align: center;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .placeholderCard {
+        background: var(--color-bg-secondary, #1f2937);
+    }
+
+    .emptyCard {
+        background: var(--color-bg-secondary, #1f2937);
+    }
+
+    .placeholderSkeleton {
+        background: linear-gradient(90deg,
+                var(--color-bg-secondary, #1f2937) 0%,
+                var(--color-border-muted, #374151) 50%,
+                var(--color-bg-secondary, #1f2937) 100%);
+    }
+
+    .stepTitle {
+        color: #f3f4f6;
+    }
+
+    .setupCycleIcon {
+        background: #1e3a5f;
+    }
+
+    .setupCycleTitle {
+        color: #f3f4f6;
+    }
+
+    .stepDescription {
+        color: #9ca3af;
+    }
+}

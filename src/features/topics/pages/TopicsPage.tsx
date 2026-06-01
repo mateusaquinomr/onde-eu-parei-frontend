@@ -4,13 +4,15 @@ import { Text } from '@/shared/components/ui/Text/Text';
 import { Button } from '@/shared/components/ui/Button/Button';
 import { TopicList } from '../components/topic/TopicList/TopicList';
 import { CreateTopicModal } from '../components/topic/CreateTopicModal/CreateTopicModal';
+import { ImportTopicsModal } from '../components/topic/ImportTopicsModal/ImportTopicsModal';
 import { useTopics } from '../hooks/useTopics';
 import styles from './TopicsPage.module.css';
 
 export function TopicsPage() {
     const navigate = useNavigate();
-    const { topics, loading, createTopic } = useTopics();
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const { topics, loading, createTopic, createMultipleTopics } = useTopics();
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [isImportModalOpen, setIsImportModalOpen] = useState(false);
 
     const handleTopicClick = (topicId: string) => {
         navigate(`/topics/${topicId}`);
@@ -18,8 +20,73 @@ export function TopicsPage() {
 
     const handleCreateTopic = async (topicData: any) => {
         await createTopic(topicData);
-        setIsModalOpen(false);
+        setIsCreateModalOpen(false);
     };
+
+    const handleImportTopics = async (topicsData: any[]) => {
+        await createMultipleTopics(topicsData);
+        setIsImportModalOpen(false);
+    };
+
+    if (!loading && topics.length === 0) {
+        return (
+            <div className={styles.container}>
+                <div className={styles.header}>
+                    <Text as="h1" variant="pageTitle">
+                        Tópicos
+                    </Text>
+                    <div className={styles.actions}>
+                        <Button
+                            variant="secondary"
+                            icon={<span className="material-icons">file_download</span>}
+                            onClick={() => setIsImportModalOpen(true)}
+                        >
+                            Importar tópicos
+                        </Button>
+                        <Button
+                            variant="primary"
+                            icon={<span className="material-icons">add</span>}
+                            onClick={() => setIsCreateModalOpen(true)}
+                        >
+                            Adicionar tópico
+                        </Button>
+                    </div>
+                </div>
+
+                <div className={styles.emptyState}>
+                    <Text variant="body" className={styles.emptyText}>
+                        Adicione seus tópicos de estudo{' '}
+                        <button
+                            className={styles.inlineButton}
+                            onClick={() => setIsCreateModalOpen(true)}
+                        >
+                            manualmente
+                        </button>
+                        {' ou '}
+                        <button
+                            className={styles.inlineButton}
+                            onClick={() => setIsImportModalOpen(true)}
+                        >
+                            importe
+                        </button>
+                        {' de um template.'}
+                    </Text>
+                </div>
+
+                <CreateTopicModal
+                    isOpen={isCreateModalOpen}
+                    onClose={() => setIsCreateModalOpen(false)}
+                    onSave={handleCreateTopic}
+                />
+
+                <ImportTopicsModal
+                    isOpen={isImportModalOpen}
+                    onClose={() => setIsImportModalOpen(false)}
+                    onImport={handleImportTopics}
+                />
+            </div>
+        );
+    }
 
     return (
         <div className={styles.container}>
@@ -27,13 +94,22 @@ export function TopicsPage() {
                 <Text as="h1" variant="pageTitle">
                     Tópicos
                 </Text>
-                <Button
-                    variant="primary"
-                    icon={<span>+</span>}
-                    onClick={() => setIsModalOpen(true)}
-                >
-                    Adicionar tópico
-                </Button>
+                <div className={styles.actions}>
+                    <Button
+                        variant="secondary"
+                        icon={<span className="material-icons">file_download</span>}
+                        onClick={() => setIsImportModalOpen(true)}
+                    >
+                        Importar tópicos
+                    </Button>
+                    <Button
+                        variant="primary"
+                        icon={<span className="material-icons">add</span>}
+                        onClick={() => setIsCreateModalOpen(true)}
+                    >
+                        Adicionar tópico
+                    </Button>
+                </div>
             </div>
 
             {loading ? (
@@ -46,9 +122,15 @@ export function TopicsPage() {
             )}
 
             <CreateTopicModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
+                isOpen={isCreateModalOpen}
+                onClose={() => setIsCreateModalOpen(false)}
                 onSave={handleCreateTopic}
+            />
+
+            <ImportTopicsModal
+                isOpen={isImportModalOpen}
+                onClose={() => setIsImportModalOpen(false)}
+                onImport={handleImportTopics}
             />
         </div>
     );

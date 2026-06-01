@@ -1,10 +1,11 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { ContentItem } from '../ContentItem/ContentItem';
-import type { Content, ImportanceLevel } from '../../../types/topic.types';
+import type { Content, ImportanceLevel, ChecklistItem, QuestionList } from '../../../types/topic.types';
 
 interface SortableContentItemProps {
     content: Content;
+    topicId: string;  // ADICIONADO
     index: number;
     isEditing: boolean;
     onEdit: () => void;
@@ -12,6 +13,9 @@ interface SortableContentItemProps {
     onCancel: () => void;
     onDelete: () => void;
     onToggleComplete: () => void;
+    onUpdateChecklist: (contentId: string, items: ChecklistItem[]) => void;
+    onUpdateNotes: (contentId: string, notes: string) => void;
+    onUpdateQuestions?: (contentId: string, lists: QuestionList[]) => void;
     showDragHandle?: boolean;
 }
 
@@ -46,6 +50,7 @@ export function SortableContentItem(props: SortableContentItemProps) {
         <div ref={setNodeRef} style={style}>
             <ContentItem
                 content={props.content}
+                topicId={props.topicId}  // ADICIONADO
                 index={props.index}
                 isEditing={props.isEditing}
                 onEdit={props.onEdit}
@@ -53,6 +58,9 @@ export function SortableContentItem(props: SortableContentItemProps) {
                 onCancel={props.onCancel}
                 onDelete={handleDelete}
                 onToggleComplete={handleToggleComplete}
+                onUpdateChecklist={props.onUpdateChecklist}
+                onUpdateNotes={props.onUpdateNotes}
+                onUpdateQuestions={props.onUpdateQuestions}
                 dragHandleProps={props.showDragHandle ? { ...attributes, ...listeners } : undefined}
             />
         </div>

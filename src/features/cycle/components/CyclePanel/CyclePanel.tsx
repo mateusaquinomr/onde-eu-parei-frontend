@@ -11,6 +11,20 @@ interface CyclePanelProps {
     onReconfigure: () => void;
 }
 
+const formatMinutes = (minutes: number): string => {
+    if (!minutes || minutes === 0) return '0min';
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+
+    if (hours > 0 && mins > 0) {
+        return `${hours}h${mins}m`;
+    } else if (hours > 0) {
+        return `${hours}h`;
+    } else {
+        return `${mins}m`;
+    }
+};
+
 export function CyclePanel({ cycle, onReconfigure }: CyclePanelProps) {
     const [isEditing, setIsEditing] = useState(false);
     const [hasChanges, setHasChanges] = useState(false);
@@ -18,7 +32,7 @@ export function CyclePanel({ cycle, onReconfigure }: CyclePanelProps) {
         cycle.blocks.find(b => !b.completed)?.id
     );
 
-    const remainingHours = cycle.remainingHours.toFixed(1);
+    const remainingTime = formatMinutes(cycle.remainingMinutes);
 
     const handleEdit = () => {
         setIsEditing(true);
@@ -44,14 +58,14 @@ export function CyclePanel({ cycle, onReconfigure }: CyclePanelProps) {
         <div className={styles.container}>
             <div className={styles.header}>
                 <Text variant="cardTitle">
-                    Blocos de estudo ({remainingHours}h restantes)
+                    Blocos de estudo ({remainingTime} restantes)
                 </Text>
                 <div className={styles.actions}>
                     {isEditing ? (
                         <>
                             <Button
                                 variant="ghost"
-                                icon={<span>✓</span>}
+                                icon={<span className="material-icons">check</span>}
                                 onClick={handleSave}
                                 disabled={!hasChanges}
                                 className={hasChanges ? styles.saveActive : styles.saveDisabled}
@@ -59,7 +73,7 @@ export function CyclePanel({ cycle, onReconfigure }: CyclePanelProps) {
                             />
                             <Button
                                 variant="ghost"
-                                icon={<span>✕</span>}
+                                icon={<span className="material-icons">close</span>}
                                 onClick={handleCancel}
                                 aria-label="Cancelar edição"
                             />
@@ -67,7 +81,7 @@ export function CyclePanel({ cycle, onReconfigure }: CyclePanelProps) {
                     ) : (
                         <Button
                             variant="ghost"
-                            icon={<span>!</span>}
+                            icon={<span className="material-icons-outlined">tune</span>}
                             onClick={handleEdit}
                             aria-label="Editar blocos"
                         />

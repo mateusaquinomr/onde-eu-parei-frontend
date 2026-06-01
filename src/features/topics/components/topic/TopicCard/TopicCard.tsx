@@ -55,17 +55,46 @@ export function TopicCard({ topic, onClick }: TopicCardProps) {
         }
     };
 
-    const formatTotalHours = (hours?: number) => {
-        if (hours === undefined || hours === null) return '0h';
-        return `${hours.toFixed(1)}h`;
+    const formatTotalMinutes = (minutes?: number) => {
+        if (minutes === undefined || minutes === null) return '0min';
+
+        const hours = Math.floor(minutes / 60);
+        const mins = minutes % 60;
+
+        if (hours > 0 && mins > 0) {
+            return `${hours}h ${mins}min`;
+        } else if (hours > 0) {
+            return `${hours}h`;
+        } else {
+            return `${mins}min`;
+        }
     };
 
     return (
         <div
             className={styles.card}
             onClick={onClick}
-            style={{ borderTop: `4px solid ${notebookColorMap[topic.notebookColor]}` }}
         >
+
+            <div
+                className={styles.colorBar}
+                style={{ backgroundColor: notebookColorMap[topic.notebookColor] }}
+            >
+                <div className={styles.colorBarCircle} />
+                <div className={styles.colorBarCircle} />
+                <div className={styles.colorBarCircle} />
+                <div className={styles.colorBarCircle} />
+                <div className={styles.colorBarCircle} />
+                <div className={styles.colorBarCircle} />
+                <div className={styles.colorBarCircle} />
+                <div className={styles.colorBarCircle} />
+                <div className={styles.colorBarCircle} />
+                <div className={styles.colorBarCircle} />
+                <div className={styles.colorBarCircle} />
+                <div className={styles.colorBarCircle} />
+                <div className={styles.colorBarCircle} />
+                <div className={styles.colorBarCircle} />
+            </div>
 
             <div className={styles.header}>
                 <Text as="h3" variant="cardTitle" className={styles.title}>
@@ -89,7 +118,6 @@ export function TopicCard({ topic, onClick }: TopicCardProps) {
                 </div>
             )}
 
-
             <div className={styles.progressContainer}>
                 <CircularProgress
                     progress={progress}
@@ -101,20 +129,26 @@ export function TopicCard({ topic, onClick }: TopicCardProps) {
 
                 <div className={styles.statsRow}>
                     <div className={styles.statItem}>
-                        <Text variant="caption" className={styles.statLabel}>
-                            último acesso
-                        </Text>
+                        <div className={styles.statValueWrapper}>
+                            <span className="material-icons" style={{ fontSize: '12px', color: '#9CA3AF' }}>event</span>
+                            <Text variant="caption" className={styles.statLabel}>
+                                último acesso
+                            </Text>
+                        </div>
                         <Text variant="body" className={styles.statValue}>
                             {formatLastAccessed(topic.lastAccessed)}
                         </Text>
                     </div>
                     <div className={styles.statDivider} />
                     <div className={styles.statItem}>
-                        <Text variant="caption" className={styles.statLabel}>
-                            horas totais
-                        </Text>
+                        <div className={styles.statValueWrapper}>
+                            <span className="material-icons" style={{ fontSize: '12px', color: '#9CA3AF' }}>schedule</span>
+                            <Text variant="caption" className={styles.statLabel}>
+                                tempo total
+                            </Text>
+                        </div>
                         <Text variant="body" className={styles.statValue}>
-                            {formatTotalHours(topic.totalHours)}
+                            {formatTotalMinutes(topic.totalMinutes)}
                         </Text>
                     </div>
                 </div>
@@ -132,7 +166,11 @@ export function TopicCard({ topic, onClick }: TopicCardProps) {
                         {recentContents.map(content => (
                             <div key={content.id} className={styles.contentItem}>
                                 <span className={`${styles.contentStatus} ${content.completed ? styles.completed : ''}`}>
-                                    {content.completed ? 'x' : '○'}
+                                    {content.completed ? (
+                                        <span className="material-icons" style={{ fontSize: '14px' }}>check_circle</span>
+                                    ) : (
+                                        <span className="material-icons" style={{ fontSize: '14px' }}>radio_button_unchecked</span>
+                                    )}
                                 </span>
                                 <Text variant="caption" className={styles.contentTitle}>
                                     {content.title}

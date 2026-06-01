@@ -14,7 +14,7 @@ export function BlocksView({ blocks }: BlocksViewProps) {
                         <div className={styles.blockHeader}>
                             <span className={styles.position}>#{index + 1}</span>
                             <span className={styles.topicName}>{block.topicName}</span>
-                            <span className={styles.hours}>{block.hours}h</span>
+                            <span className={styles.minutes}>{block.minutes}min</span>
                         </div>
                         {block.completed ? (
                             <div className={styles.completedBadge}>Concluído</div>

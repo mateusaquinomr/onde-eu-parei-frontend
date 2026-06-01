@@ -24,20 +24,30 @@ export function TopicSelector({ topics, selectedTopics, onSelect }: TopicSelecto
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    const isAllSelected = selectedTopics.length === 0;
+    const allTopicIds = topics.map(t => t.id);
+    const isAllSelected = selectedTopics.length === allTopicIds.length && allTopicIds.length > 0;
+    const isNothingSelected = selectedTopics.length === 0;
 
     const toggleTopic = (topicId: string) => {
         if (topicId === 'todos') {
-            onSelect([]);
-            setIsOpen(false);
+
+            if (isAllSelected) {
+                onSelect([]);
+            } else {
+                onSelect(allTopicIds);
+            }
             return;
         }
 
-        const newSelection = selectedTopics.includes(topicId)
-            ? selectedTopics.filter(id => id !== topicId)
-            : [...selectedTopics, topicId];
+        let newSelection: string[];
+        if (selectedTopics.includes(topicId)) {
+            newSelection = selectedTopics.filter(id => id !== topicId);
+        } else {
+            newSelection = [...selectedTopics, topicId];
+        }
 
         onSelect(newSelection);
+        setIsOpen(false);
     };
 
     const filteredTopics = topics.filter(topic =>
@@ -46,6 +56,7 @@ export function TopicSelector({ topics, selectedTopics, onSelect }: TopicSelecto
 
     const getDisplayText = () => {
         if (isAllSelected) return 'Todos os tópicos';
+        if (isNothingSelected) return 'Nenhum tópico selecionado';
         if (selectedTopics.length === 1) {
             const topic = topics.find(t => t.id === selectedTopics[0]);
             return topic?.name || '1 tópico selecionado';
@@ -62,7 +73,11 @@ export function TopicSelector({ topics, selectedTopics, onSelect }: TopicSelecto
                 onClick={() => setIsOpen(!isOpen)}
             >
                 <span className={styles.selectedText}>{getDisplayText()}</span>
-                <span className={styles.arrow}>{isOpen ? '^' : 'v'}</span>
+                <span className={styles.arrow}>
+                    <span className="material-icons" style={{ fontSize: '16px' }}>
+                        {isOpen ? 'expand_less' : 'expand_more'}
+                    </span>
+                </span>
             </div>
 
             {isOpen && (
@@ -116,7 +131,9 @@ export function TopicSelector({ topics, selectedTopics, onSelect }: TopicSelecto
             <Text variant="caption" className={styles.hint}>
                 {isAllSelected
                     ? 'Todos os tópicos selecionados'
-                    : `${selectedTopics.length} tópico(s) selecionado(s)`
+                    : isNothingSelected
+                        ? 'Nenhum tópico selecionado'
+                        : `${selectedTopics.length} tópico(s) selecionado(s)`
                 }
             </Text>
         </div>

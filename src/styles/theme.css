@@ -66,7 +66,7 @@
 }
 
 [data-theme="dark"] {
-    /* ===== DARK THEME ===== */
+    /* DARK THEME */
 
     /* Background */
     --color-bg: var(--color-gray-900);

@@ -1,23 +1,73 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import type { Cycle, CycleConfig, CycleRule, CycleSummary } from '../types/cycle.types';
 import { cycleService } from '../services/cycleService';
 import { useTopics } from '../../topics/hooks/useTopics';
 
 export function useCycle() {
     const { topics } = useTopics();
-    const [currentCycle, setCurrentCycle] = useState<Cycle | null>(() => cycleService.getCurrentCycle());
-    const [cycleSummary, setCycleSummary] = useState<CycleSummary>(() => cycleService.getSummary());
-    const [config, setConfig] = useState<CycleConfig>({
-        hoursPerTopic: 4,
-        minHoursPerTopic: 1,
-        selectedTopics: [],
-        rules: []
+    const [currentCycle, setCurrentCycle] = useState<Cycle | null>(null);
+    const [cycleSummary, setCycleSummary] = useState<CycleSummary>({
+        totalCycles: 0,
+        totalStudyMinutes: 0,
+        currentCycle: null
     });
-    const [isConfigModalOpen, setIsConfigModalOpen] = useState(!currentCycle);
+    const [config, setConfig] = useState<CycleConfig>(() => {
+        const savedConfig = localStorage.getItem('cycleConfig');
+        if (savedConfig) {
+            return JSON.parse(savedConfig);
+        }
+        return {
+            minutesPerTopic: 60,
+            minMinutesPerTopic: 30,
+            selectedTopics: [],
+            rules: []
+        };
+    });
+    const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
     const [currentStep, setCurrentStep] = useState(1);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const loadInitialData = async () => {
+            setLoading(true);
+            try {
+                const [activeCycle, summary] = await Promise.all([
+                    cycleService.getCurrentCycle(),
+                    cycleService.getSummary()
+                ]);
+                setCurrentCycle(activeCycle);
+                setCycleSummary(summary);
+                setIsConfigModalOpen(!activeCycle);
+            } catch (error) {
+                console.error('Erro ao carregar dados:', error);
+                setIsConfigModalOpen(true);
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadInitialData();
+    }, []);
+
+    useEffect(() => {
+        const syncWithTopics = async () => {
+            if (currentCycle && topics.length > 0) {
+                const updatedCycle = await cycleService.syncWithTopics(currentCycle.id, topics);
+                if (updatedCycle) {
+                    setCurrentCycle(updatedCycle);
+                    const summary = await cycleService.getSummary();
+                    setCycleSummary(summary);
+                }
+            }
+        };
+        syncWithTopics();
+    }, [topics, currentCycle?.id]);
 
     const updateConfig = useCallback((updates: Partial<CycleConfig>) => {
-        setConfig(prev => ({ ...prev, ...updates }));
+        setConfig(prev => {
+            const newConfig = { ...prev, ...updates };
+            localStorage.setItem('cycleConfig', JSON.stringify(newConfig));
+            return newConfig;
+        });
     }, []);
 
     const addRule = useCallback((rule: Omit<CycleRule, 'id'>) => {
@@ -45,14 +95,39 @@ export function useCycle() {
         }));
     }, []);
 
-    const generateCycle = useCallback(() => {
-        const cycle = cycleService.generateCycle(config, topics);
+    const generateCycle = useCallback(async () => {
+        const cycle = await cycleService.generateCycle(config, topics);
         setCurrentCycle(cycle);
-        setCycleSummary(cycleService.getSummary());
+        const summary = await cycleService.getSummary();
+        setCycleSummary(summary);
         setIsConfigModalOpen(false);
         setCurrentStep(1);
         return cycle;
     }, [config, topics]);
+
+    const completeBlock = useCallback(async (blockId: string) => {
+        if (!currentCycle) return null;
+
+        const updatedCycle = await cycleService.completeBlock(currentCycle.id, blockId, topics);
+        if (updatedCycle) {
+            setCurrentCycle(updatedCycle);
+            const summary = await cycleService.getSummary();
+            setCycleSummary(summary);
+        }
+        return updatedCycle;
+    }, [currentCycle, topics]);
+
+    const decrementBlockMinutes = useCallback(async (blockId: string, minutes: number) => {
+        if (!currentCycle) return null;
+
+        const updatedCycle = await cycleService.decrementBlockMinutes(currentCycle.id, blockId, minutes);
+        if (updatedCycle) {
+            setCurrentCycle(updatedCycle);
+            const summary = await cycleService.getSummary();
+            setCycleSummary(summary);
+        }
+        return updatedCycle;
+    }, [currentCycle]);
 
     const nextStep = useCallback(() => {
         setCurrentStep(prev => prev + 1);
@@ -78,11 +153,14 @@ export function useCycle() {
         config,
         isConfigModalOpen,
         currentStep,
+        loading,
         updateConfig,
         addRule,
         removeRule,
         selectTopics,
         generateCycle,
+        completeBlock,
+        decrementBlockMinutes,
         nextStep,
         prevStep,
         openConfigModal,

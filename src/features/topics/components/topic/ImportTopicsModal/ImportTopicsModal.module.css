@@ -1,0 +1,306 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal {
+    background: var(--color-bg-primary, #ffffff);
+    border-radius: 16px;
+    width: 90%;
+    max-width: 900px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--color-border, #e5e7eb);
+}
+
+.title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--color-text-primary, #1f2937);
+}
+
+.closeButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-text-secondary, #6b7280);
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.closeButton:hover {
+    background-color: var(--color-bg-secondary, #f3f4f6);
+}
+
+.closeButton .material-icons {
+    font-size: 20px;
+}
+
+.content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+}
+
+.footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--color-border, #e5e7eb);
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+.templatesGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem;
+}
+
+.templateCard {
+    background: var(--color-bg-secondary, #f9fafb);
+    border: 2px solid var(--color-border, #e5e7eb);
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.templateCard:hover:not(.disabled) {
+    border-color: var(--color-primary, #3b82f6);
+    background: var(--color-primary-light, #eff6ff);
+    transform: translateY(-2px);
+}
+
+.templateCard.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    filter: grayscale(0.3);
+}
+
+.templateCard.selected {
+    border-color: var(--color-primary, #3b82f6);
+    background: var(--color-primary-light, #eff6ff);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+.templateIcon {
+    font-size: 3rem;
+}
+
+.templateTitle {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--color-text-primary, #1f2937);
+}
+
+.templateDescription {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary, #6b7280);
+    margin: 0;
+}
+
+.disabledBadge {
+    background: var(--color-bg-tertiary, #e5e7eb);
+    color: var(--color-text-secondary, #6b7280);
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.topicsEditor {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.editorHeader {
+    display: grid;
+    grid-template-columns: 24px 1fr 100px 100px 80px;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: var(--color-bg-secondary, #f9fafb);
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary, #6b7280);
+    border-bottom: 1px solid var(--color-border, #e5e7eb);
+    margin-bottom: 0.5rem;
+}
+
+.headerTopic {
+    grid-column: 2 / 3;
+    padding-left: 0.5rem;
+}
+
+.headerCaderno {
+    grid-column: 3 / 4;
+    width: 100px;
+}
+
+.headerDifficulty {
+    grid-column: 4 / 5;
+    width: 100px;
+}
+
+.headerActions {
+    grid-column: 5 / 6;
+    width: 80px;
+    text-align: center;
+}
+
+.topicsList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-height: 500px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.topicsList::-webkit-scrollbar {
+    width: 6px;
+}
+
+.topicsList::-webkit-scrollbar-track {
+    background: var(--color-bg-tertiary, #f1f1f1);
+    border-radius: 3px;
+}
+
+.topicsList::-webkit-scrollbar-thumb {
+    background: var(--color-border, #cbd5e1);
+    border-radius: 3px;
+}
+
+.topicsList::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text-secondary, #94a3b8);
+}
+
+.emptyTopics {
+    text-align: center;
+    padding: 3rem;
+    color: var(--color-text-secondary, #6b7280);
+}
+
+.button {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    font-size: 0.875rem;
+}
+
+.buttonPrimary {
+    background: var(--color-primary, #3b82f6);
+    color: white;
+}
+
+.buttonPrimary:hover {
+    background: var(--color-primary-dark, #2563eb);
+}
+
+.buttonSecondary {
+    background: var(--color-bg-secondary, #f3f4f6);
+    color: var(--color-text-primary, #1f2937);
+    border: 1px solid var(--color-border, #e5e7eb);
+}
+
+.buttonSecondary:hover {
+    background: var(--color-bg-tertiary, #e5e7eb);
+}
+
+.buttonGhost {
+    background: none;
+    color: var(--color-text-secondary, #6b7280);
+}
+
+.buttonGhost:hover {
+    background: var(--color-bg-secondary, #f3f4f6);
+}
+
+@media (max-width: 768px) {
+    .modal {
+        width: 95%;
+        max-height: 95vh;
+    }
+
+    .content {
+        padding: 1rem;
+    }
+
+    .editorHeader {
+        display: none;
+    }
+
+    .templatesGrid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 0.5rem;
+    }
+
+    .footer {
+        flex-wrap: wrap;
+    }
+
+    .footer button {
+        flex: 1;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .modal {
+        background: var(--color-bg-secondary, #1f2937);
+    }
+
+    .templateCard {
+        background: var(--color-bg-tertiary, #374151);
+        border-color: var(--color-border-dark, #4b5563);
+    }
+
+    .editorHeader {
+        background: var(--color-bg-tertiary, #374151);
+        border-color: var(--color-border-dark, #4b5563);
+    }
+
+    .topicsList::-webkit-scrollbar-track {
+        background: var(--color-bg-tertiary, #374151);
+    }
+
+    .topicsList::-webkit-scrollbar-thumb {
+        background: var(--color-border-dark, #4b5563);
+    }
+}
