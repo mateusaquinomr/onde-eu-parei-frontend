@@ -153,6 +153,14 @@
     line-height: 1.4;
 }
 
+.dropdownIconSvg {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 @media (prefers-color-scheme: dark) {
     .userButton {
         background: #1f2937;

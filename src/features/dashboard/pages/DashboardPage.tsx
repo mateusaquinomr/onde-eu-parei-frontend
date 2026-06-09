@@ -20,8 +20,8 @@ const PlaceholderCard = () => {
 
 export const DashboardPage = () => {
     const navigate = useNavigate();
-    const { topics, updateTopic, addStudyMinutes } = useTopics();
-    const { currentCycle, completeBlock, decrementBlockMinutes } = useCycle();
+    const { topics, loading: topicsLoading, updateTopic, addStudyMinutes } = useTopics();
+    const { currentCycle, loading: cycleLoading, completeBlock, decrementBlockMinutes } = useCycle();
 
     const [activeBlockId, setActiveBlockId] = useState<string | undefined>();
     const [currentContent, setCurrentContent] = useState<{
@@ -36,6 +36,7 @@ export const DashboardPage = () => {
     const isProcessingMinute = useRef(false);
     const hasTopics = topics.length > 0;
     const hasCycle = currentCycle !== null && currentCycle.blocks.length > 0;
+    const isLoading = topicsLoading || cycleLoading;
 
     const getCurrentContentFromTopic = useCallback((topicId: string): Content | null => {
         const topic = topics.find(t => t.id === topicId);
@@ -164,7 +165,6 @@ export const DashboardPage = () => {
         }
     };
 
-
     const handleTimeUpdate = async (contentId: string, elapsedSeconds: number) => {
 
         return;
@@ -274,6 +274,22 @@ export const DashboardPage = () => {
     };
 
     const activeBlock = cycleBlocks.find(block => block.id === activeBlockId);
+
+    if (isLoading) {
+        return (
+            <div className={styles.dashboard}>
+                <div className={styles.centerColumnFull}>
+                    <div className="flex items-center justify-center h-64">
+                        <div className="text-center">
+                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+                            <p className="mt-4 text-gray-600">Carregando seu ciclo de estudos...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
 
     if (!hasTopics && !hasCycle) {
         return (
