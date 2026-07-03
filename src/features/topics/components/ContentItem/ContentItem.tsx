@@ -5,7 +5,7 @@ import { Input } from '@/shared/components/ui/Form/Input';
 import { Select } from '@/shared/components/ui/Form/Select';
 import { DragHandle } from '../DragHandle/DragHandle';
 import { StudyTools } from '@/features/study/components/study-tools/StudyTools';
-import type { Content, ImportanceLevel, ChecklistItem, QuestionList } from '../../../types/topic.types';
+import type { Content, ImportanceLevel, ChecklistItem, QuestionList } from '../../types/topic.types';
 import styles from './ContentItem.module.css';
 
 interface ContentItemProps {

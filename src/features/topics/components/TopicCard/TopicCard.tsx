@@ -1,5 +1,5 @@
 import { Text } from '@/shared/components/ui/Text/Text';
-import type { Topic } from '../../../types/topic.types';
+import type { Topic } from '../../types/topic.types';
 import { CircularProgress } from '../CircularProgress/CircularProgress';
 import styles from './TopicCard.module.css';
 

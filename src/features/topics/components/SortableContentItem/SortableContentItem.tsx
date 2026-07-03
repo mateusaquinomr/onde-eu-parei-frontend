@@ -1,7 +1,7 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { ContentItem } from '../ContentItem/ContentItem';
-import type { Content, ImportanceLevel, ChecklistItem, QuestionList } from '../../../types/topic.types';
+import type { Content, ImportanceLevel, ChecklistItem, QuestionList } from '../../types/topic.types';
 
 interface SortableContentItemProps {
     content: Content;
