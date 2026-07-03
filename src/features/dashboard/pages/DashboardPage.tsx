@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { StudyWidget } from '@/features/topics/components/studyTools/StudyWidget/StudyWidget';
+import { StudyWidget } from '@/features/study/components/study-widget/StudyWidget';
 import { TimelineInfinite } from '@/features/cycle/components/TimelineInfinite/TimelineInfinite';
 import { Widget } from '../components/Widget/Widget';
 import { Button } from '@/shared/components/ui/Button/Button';

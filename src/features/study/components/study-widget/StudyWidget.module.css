@@ -1,0 +1,28 @@
+.studyWidget {
+    width: 100%;
+}
+
+.timerSection {
+    padding: 0rem 0rem;
+    padding-bottom: 1.5rem;
+}
+
+.toolsSection {
+    padding: 0rem 0rem;
+}
+
+@media (prefers-color-scheme: dark) {
+    .studyWidget {
+        background: #1f2937;
+    }
+}
+
+@media (max-width: 640px) {
+    .timerSection {
+        /* padding: 0.75rem; */
+    }
+
+    .toolsSection {
+        /* padding: 0.5rem 0.75rem 0.75rem; */
+    }
+}

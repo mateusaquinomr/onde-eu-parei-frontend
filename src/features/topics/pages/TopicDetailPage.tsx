@@ -7,8 +7,8 @@ import { Select } from '@/shared/components/ui/Form/Select';
 import { EditableTitle } from '@/shared/components/ui/EditableTitle/EditableTitle';
 import { EditableMetadata } from '@/shared/components/ui/EditableMetadata/EditableMetadata';
 import { useTopics } from '../hooks/useTopics';
-import { ContentList } from '../components/topic/ContentList/ContentList';
-import { CircularProgress } from '../components/topic/CircularProgress/CircularProgress';
+import { ContentList } from '../components/ContentList/ContentList';
+import { CircularProgress } from '../components/CircularProgress/CircularProgress';
 import type { Content, ImportanceLevel, NotebookColor, DifficultyLevel, ChecklistItem, QuestionList } from '../types/topic.types';
 import styles from './TopicDetailPage.module.css';
 
