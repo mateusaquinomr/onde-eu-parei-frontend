@@ -1,5 +1,5 @@
 import { Text } from '@/shared/components/ui/Text/Text';
-import { CircularProgress } from '@/features/topics/components/topic/CircularProgress/CircularProgress';
+import { CircularProgress } from '@/features/topics/components/CircularProgress/CircularProgress';
 import type { CycleProgress } from '../../types/performance.types';
 import styles from './CycleProgressCard.module.css';
 

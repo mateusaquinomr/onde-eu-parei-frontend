@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Text } from '@/shared/components/ui/Text/Text';
 import { Button } from '@/shared/components/ui/Button/Button';
-import { TopicList } from '../components/topic/TopicList/TopicList';
-import { CreateTopicModal } from '../components/topic/CreateTopicModal/CreateTopicModal';
-import { ImportTopicsModal } from '../components/topic/ImportTopicsModal/ImportTopicsModal';
+import { TopicList } from '../components/TopicList/TopicList';
+import { CreateTopicModal } from '../components/CreateTopicModal/CreateTopicModal';
+import { ImportTopicsModal } from '../components/ImportTopicsModal/ImportTopicsModal';
 import { useTopics } from '../hooks/useTopics';
 import styles from './TopicsPage.module.css';
 
