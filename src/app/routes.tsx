@@ -5,6 +5,7 @@ import { PublicLayout } from '@/shared/components/layout/PublicLayout/PublicLayo
 import { DashboardPage } from '@/features/dashboard/pages/DashboardPage';
 import { TopicsPage } from '@/features/topics/pages/TopicsPage';
 import { TopicDetailPage } from '@/features/topics/pages/TopicDetailPage';
+import { EditaisPage } from '@/features/editais/pages/EditaisPage';  // ← NOVO
 import { CyclePage } from '@/features/cycle/pages/CyclePage/CyclePage';
 import { PerformancePage } from '@/features/performance/pages/PerformancePage/PerformancePage';
 import { ProfilePage } from '@/features/user/pages/ProfilePage/ProfilePage';
@@ -23,7 +24,6 @@ function AppRoutesContent() {
 
     return (
         <Routes>
-
             <Route element={<PublicLayout />}>
                 <Route path="/" element={
                     isAuthenticated ? <Navigate to="/dashboard" /> : <Navigate to="/home" />
@@ -35,11 +35,14 @@ function AppRoutesContent() {
                 <Route path="/register/template" element={<RegisterStep3 />} />
             </Route>
 
-
             <Route element={<PrivateLayout />}>
                 <Route path="/dashboard" element={<DashboardPage />} />
-                <Route path="/topics" element={<TopicsPage />} />
-                <Route path="/topics/:id" element={<TopicDetailPage />} />
+
+                {/* Rotas de Editais e Tópicos */}
+                <Route path="/editais" element={<EditaisPage />} />           {/* ← NOVO */}
+                <Route path="/topics" element={<TopicsPage />} />              {/* Parado, mas mantido */}
+                <Route path="/topics/:id" element={<TopicDetailPage />} />    {/* Mantido */}
+
                 <Route path="/cycle" element={<CyclePage />} />
                 <Route path="/performance" element={<PerformancePage />} />
                 <Route path="/profile" element={<ProfilePage />} />

@@ -20,67 +20,78 @@ export function useStudyTimer({
 
     const intervalRef = useRef<number | null>(null);
     const lastMinuteRef = useRef(0);
-    const isProcessingRef = useRef(false);
+
+    const baseElapsedRef = useRef(0);
+    const startTimestampRef = useRef<number | null>(null);
 
     useEffect(() => {
-        const loadSavedProgress = () => {
-            let savedSeconds = 0;
+        let savedSeconds = 0;
 
-            if (initialElapsedTime > 0) {
-                savedSeconds = Math.floor(initialElapsedTime);
-            } else {
-                const savedProgress = studyTimerService.getProgress(contentId);
-                if (savedProgress && savedProgress.elapsedSeconds > 0) {
-                    savedSeconds = Math.floor(savedProgress.elapsedSeconds);
-                }
+        if (initialElapsedTime > 0) {
+            savedSeconds = Math.floor(initialElapsedTime);
+        } else {
+            const savedProgress = studyTimerService.getProgress(contentId);
+            if (savedProgress && savedProgress.elapsedSeconds > 0) {
+                savedSeconds = Math.floor(savedProgress.elapsedSeconds);
             }
+        }
 
-            setElapsedSeconds(savedSeconds);
-            lastMinuteRef.current = Math.floor(savedSeconds / 60);
-            setIsInitialized(true);
-        };
+        setElapsedSeconds(savedSeconds);
+        baseElapsedRef.current = savedSeconds;
+        lastMinuteRef.current = Math.floor(savedSeconds / 60);
+        setIsInitialized(true);
 
-        loadSavedProgress();
-    }, [contentId, initialElapsedTime]);
+    }, [contentId]);
 
-    const tick = useCallback(() => {
-        if (!isRunning || isCompleted) return;
+    const computeElapsed = useCallback(() => {
+        if (!isRunning || startTimestampRef.current === null) {
+            return baseElapsedRef.current;
+        }
+        const runningSeconds = (Date.now() - startTimestampRef.current) / 1000;
+        return baseElapsedRef.current + runningSeconds;
+    }, [isRunning]);
 
-        if (isProcessingRef.current) return;
-        isProcessingRef.current = true;
+    const applyElapsed = useCallback((rawElapsed: number) => {
+        const cappedElapsed = Math.min(rawElapsed, estimatedSeconds);
+        const newValue = Math.floor(cappedElapsed);
 
-        setElapsedSeconds(prev => {
-            const newValue = prev + 1;
-
-            if (newValue >= estimatedSeconds) {
-                setIsRunning(false);
-                setIsCompleted(true);
-                studyTimerService.saveProgress(contentId, estimatedSeconds);
-                onComplete?.(contentId, estimatedSeconds);
-                if (intervalRef.current) {
-                    clearInterval(intervalRef.current);
-                    intervalRef.current = null;
-                }
-                isProcessingRef.current = false;
-                return estimatedSeconds;
-            }
+        setElapsedSeconds(prevDisplayed => {
+            if (newValue === prevDisplayed) return prevDisplayed;
 
             const newMinute = Math.floor(newValue / 60);
-            if (newMinute > lastMinuteRef.current && onMinuteTick) {
+            if (newMinute > lastMinuteRef.current) {
+
                 const minutesPassed = newMinute - lastMinuteRef.current;
                 lastMinuteRef.current = newMinute;
-                onMinuteTick(contentId, minutesPassed);
+                onMinuteTick?.(contentId, minutesPassed);
             }
 
-            if (newValue % 10 === 0) {
+            if (newValue % 10 === 0 || newValue >= estimatedSeconds) {
                 studyTimerService.saveProgress(contentId, newValue);
             }
 
             onTimeUpdate?.(contentId, newValue);
-            isProcessingRef.current = false;
             return newValue;
         });
-    }, [isRunning, isCompleted, estimatedSeconds, contentId, onTimeUpdate, onComplete, onMinuteTick]);
+
+        if (rawElapsed >= estimatedSeconds) {
+            baseElapsedRef.current = estimatedSeconds;
+            startTimestampRef.current = null;
+            setIsRunning(false);
+            setIsCompleted(true);
+            studyTimerService.saveProgress(contentId, estimatedSeconds);
+            onComplete?.(contentId, estimatedSeconds);
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+                intervalRef.current = null;
+            }
+        }
+    }, [estimatedSeconds, contentId, onTimeUpdate, onComplete, onMinuteTick]);
+
+    const tick = useCallback(() => {
+        if (!isRunning || isCompleted) return;
+        applyElapsed(computeElapsed());
+    }, [isRunning, isCompleted, computeElapsed, applyElapsed]);
 
     useEffect(() => {
         if (!isInitialized) return;
@@ -100,23 +111,44 @@ export function useStudyTimer({
         };
     }, [isRunning, isCompleted, isInitialized, tick]);
 
+    useEffect(() => {
+        const handleVisibilityOrFocus = () => {
+            if (document.visibilityState === 'visible') {
+                tick();
+            }
+        };
+        document.addEventListener('visibilitychange', handleVisibilityOrFocus);
+        window.addEventListener('focus', handleVisibilityOrFocus);
+        return () => {
+            document.removeEventListener('visibilitychange', handleVisibilityOrFocus);
+            window.removeEventListener('focus', handleVisibilityOrFocus);
+        };
+    }, [tick]);
+
     const start = useCallback(() => {
         if (!isCompleted && isInitialized) {
+            startTimestampRef.current = Date.now();
             setIsRunning(true);
         }
     }, [isCompleted, isInitialized]);
 
     const pause = useCallback(() => {
+        const finalElapsed = Math.min(computeElapsed(), estimatedSeconds);
+        baseElapsedRef.current = finalElapsed;
+        startTimestampRef.current = null;
         setIsRunning(false);
-        if (elapsedSeconds > 0) {
-            studyTimerService.saveProgress(contentId, Math.floor(elapsedSeconds));
+        applyElapsed(finalElapsed);
+        if (finalElapsed > 0) {
+            studyTimerService.saveProgress(contentId, Math.floor(finalElapsed));
         }
-    }, [elapsedSeconds, contentId]);
+    }, [computeElapsed, applyElapsed, estimatedSeconds, contentId]);
 
     const reset = useCallback(() => {
         setIsRunning(false);
         setElapsedSeconds(0);
         setIsCompleted(false);
+        baseElapsedRef.current = 0;
+        startTimestampRef.current = null;
         lastMinuteRef.current = 0;
         studyTimerService.clearProgress(contentId);
 
@@ -130,9 +162,11 @@ export function useStudyTimer({
         setElapsedSeconds(prev => {
             const newValue = prev + secondsToAdd;
             if (newValue < estimatedSeconds) {
+                baseElapsedRef.current = newValue;
                 if (isCompleted) setIsCompleted(false);
                 return newValue;
             }
+            baseElapsedRef.current = estimatedSeconds;
             setIsCompleted(true);
             setIsRunning(false);
             return estimatedSeconds;

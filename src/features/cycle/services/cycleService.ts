@@ -113,7 +113,8 @@ class CycleService {
             return null;
         }
 
-        const decrement = Math.min(minutesToDecrement, 1);
+        const decrement = Math.max(0, Math.floor(minutesToDecrement));
+        if (decrement === 0) return this.currentCycle;
 
         try {
             console.log(`Decrementando ${decrement} min do bloco ${blockId} no ciclo ${cycleId}`);
@@ -180,6 +181,12 @@ class CycleService {
         dificil: 1
     };
 
+    private readonly difficultyRepeats = {
+        facil: 1,
+        medio: 2,
+        dificil: 3
+    };
+
     private generateBlocks(topics: Topic[], config: CycleConfig): CycleBlock[] {
         const blocks: CycleBlock[] = [];
         if (topics.length === 0) return blocks;
@@ -188,28 +195,65 @@ class CycleService {
         const maxTime = config.minutesPerTopic;
         const range = maxTime - minTime;
 
-        topics.forEach((topic) => {
-            const weight = this.difficultyWeight[topic.difficulty] || 0.5;
-            let topicTotalMinutes = minTime + (range * weight);
-            topicTotalMinutes = this.roundToMultipleOf5(topicTotalMinutes);
-            topicTotalMinutes = Math.min(topicTotalMinutes, maxTime);
-            topicTotalMinutes = Math.max(topicTotalMinutes, minTime);
+        const topicPlans = topics.map(topic => {
+            const weight = this.difficultyWeight[topic.difficulty] ?? 0.5;
+            const repeats = this.difficultyRepeats[topic.difficulty] ?? 2;
 
-            const currentContent = this.getCurrentContent(topic);
+            let blockMinutes = minTime + range * weight;
+            blockMinutes = this.roundToMultipleOf5(blockMinutes);
+            blockMinutes = Math.min(Math.max(blockMinutes, minTime), maxTime);
+
+            return { topic, blockMinutes, repeats };
+        });
+
+        const ordered = this.interleaveWeighted(topicPlans);
+
+        ordered.forEach((plan, index) => {
+            const currentContent = this.getCurrentContent(plan.topic);
             const contentTitle = currentContent?.title || "Estudo do tópico";
 
             blocks.push({
                 id: crypto.randomUUID(),
-                topicId: topic.id,
-                topicName: topic.name,
-                position: blocks.length,
-                minutes: topicTotalMinutes,
-                originalMinutes: topicTotalMinutes,
+                topicId: plan.topic.id,
+                topicName: plan.topic.name,
+                position: index,
+                minutes: plan.blockMinutes,
+                originalMinutes: plan.blockMinutes,
                 completed: false,
                 currentContent: contentTitle
             });
         });
+
         return blocks;
+    }
+
+    private interleaveWeighted<T extends { repeats: number }>(plans: T[]): T[] {
+        if (plans.length === 0) return [];
+
+        const totalOccurrences = plans.reduce((sum, p) => sum + p.repeats, 0);
+        const currentWeight = new Map<T, number>(plans.map(p => [p, 0]));
+        const result: T[] = [];
+
+        for (let i = 0; i < totalOccurrences; i++) {
+            plans.forEach(p => {
+                currentWeight.set(p, (currentWeight.get(p) || 0) + p.repeats);
+            });
+
+            let chosen = plans[0];
+            let maxWeight = -Infinity;
+            plans.forEach(p => {
+                const w = currentWeight.get(p)!;
+                if (w > maxWeight) {
+                    maxWeight = w;
+                    chosen = p;
+                }
+            });
+
+            result.push(chosen);
+            currentWeight.set(chosen, maxWeight - totalOccurrences);
+        }
+
+        return result;
     }
 
     private getCurrentContent(topic: Topic): { title: string } | null {

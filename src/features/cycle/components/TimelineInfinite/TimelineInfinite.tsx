@@ -20,6 +20,17 @@ export function TimelineInfinite({
     const scrollTimeoutRef = useRef<number | null>(null);
     const isInitializedRef = useRef(false);
 
+    const isUserInteractingRef = useRef(false);
+    const interactionTimeoutRef = useRef<number | null>(null);
+
+    const markUserInteraction = useCallback(() => {
+        isUserInteractingRef.current = true;
+        if (interactionTimeoutRef.current) clearTimeout(interactionTimeoutRef.current);
+        interactionTimeoutRef.current = window.setTimeout(() => {
+            isUserInteractingRef.current = false;
+        }, 600);
+    }, []);
+
     useEffect(() => {
         const multiplied: CycleBlock[] = [];
         for (let i = 0; i < 5; i++) {
@@ -101,9 +112,13 @@ export function TimelineInfinite({
             if ((atTop && e.deltaY < 0) || (atBottom && e.deltaY > 0)) {
                 e.preventDefault();
             }
+            markUserInteraction();
         };
 
         container.addEventListener('wheel', preventPageScroll, { passive: false });
+        container.addEventListener('touchstart', markUserInteraction, { passive: true });
+        container.addEventListener('touchmove', markUserInteraction, { passive: true });
+        container.addEventListener('pointerdown', markUserInteraction);
 
         const handleScroll = () => {
             if (isScrolling) return;
@@ -146,10 +161,13 @@ export function TimelineInfinite({
 
         return () => {
             container.removeEventListener('wheel', preventPageScroll);
+            container.removeEventListener('touchstart', markUserInteraction);
+            container.removeEventListener('touchmove', markUserInteraction);
+            container.removeEventListener('pointerdown', markUserInteraction);
             container.removeEventListener('scroll', handleScroll);
             if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
         };
-    }, [duplicatedBlocks, blocks.length, isScrolling, scrollToActiveBlock, activeBlockId, centerItem]);
+    }, [duplicatedBlocks, blocks.length, isScrolling, scrollToActiveBlock, activeBlockId, centerItem, markUserInteraction]);
 
     useEffect(() => {
         const container = containerRef.current;
@@ -159,6 +177,8 @@ export function TimelineInfinite({
 
         const detectCenterBlock = () => {
             if (isScrolling) return;
+
+            if (!isUserInteractingRef.current) return;
 
             const containerRect = container.getBoundingClientRect();
             const containerCenter = containerRect.top + containerRect.height / 2;
@@ -199,6 +219,12 @@ export function TimelineInfinite({
             if (detectTimeout) clearTimeout(detectTimeout);
         };
     }, [duplicatedBlocks, activeBlockId, onBlockSelect, isScrolling]);
+
+    useEffect(() => {
+        return () => {
+            if (interactionTimeoutRef.current) clearTimeout(interactionTimeoutRef.current);
+        };
+    }, []);
 
     return (
         <div className={styles.container}>

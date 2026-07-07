@@ -50,6 +50,7 @@ export function CreateTopicModal({ isOpen, onClose, onSave }: CreateTopicModalPr
             name: topicData.name!,
             notebookColor: topicData.notebookColor!,
             difficulty: topicData.difficulty!,
+            editalId: topicData.editalId,
             tags: topicData.tags!,
             contents: contents.map(({ title, importance }) => ({ title, importance }))
         });

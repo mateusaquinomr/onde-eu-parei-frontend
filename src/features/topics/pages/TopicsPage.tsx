@@ -4,7 +4,7 @@ import { Text } from '@/shared/components/ui/Text/Text';
 import { Button } from '@/shared/components/ui/Button/Button';
 import { TopicList } from '../components/TopicList/TopicList';
 import { CreateTopicModal } from '../components/CreateTopicModal/CreateTopicModal';
-import { ImportTopicsModal } from '../components/ImportTopicsModal/ImportTopicsModal';
+import { ImportEditalModal } from '@/features/editais/components/import-edital/ImportEditalModal';
 import { useTopics } from '../hooks/useTopics';
 import styles from './TopicsPage.module.css';
 
@@ -79,7 +79,7 @@ export function TopicsPage() {
                     onSave={handleCreateTopic}
                 />
 
-                <ImportTopicsModal
+                <ImportEditalModal
                     isOpen={isImportModalOpen}
                     onClose={() => setIsImportModalOpen(false)}
                     onImport={handleImportTopics}
@@ -127,7 +127,7 @@ export function TopicsPage() {
                 onSave={handleCreateTopic}
             />
 
-            <ImportTopicsModal
+            <ImportEditalModal
                 isOpen={isImportModalOpen}
                 onClose={() => setIsImportModalOpen(false)}
                 onImport={handleImportTopics}
