@@ -51,11 +51,13 @@ export interface Content {
     createdAt: Date;
     checklist: ChecklistItem[];
     studyData: ContentStudyData;
+    tags?: string[];
 }
 
 export interface Topic {
     id: string;
     name: string;
+    editalId?: string;
     notebookColor: NotebookColor;
     difficulty: DifficultyLevel;
     tags: Tag[];
@@ -70,12 +72,14 @@ export interface Topic {
 export interface CreateContentDTO {
     title: string;
     importance: ImportanceLevel;
+    tags?: string[];
 }
 
 export interface CreateTopicDTO {
     name: string;
     notebookColor: NotebookColor;
     difficulty: DifficultyLevel;
+    editalId?: string;
     tags: Tag[];
     contents: CreateContentDTO[];
 }

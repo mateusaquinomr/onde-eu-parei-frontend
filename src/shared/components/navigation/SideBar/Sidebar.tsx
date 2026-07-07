@@ -29,10 +29,10 @@ export const Sidebar = () => {
                 />
 
                 <NavIcon
-                    to="/topics"
+                    to="/editais"
                     iconOutline={<TopicOutlinedIcon />}
                     iconFilled={<TopicIcon />}
-                    label="Tópicos"
+                    label="Editais"
                 />
 
                 <NavIcon

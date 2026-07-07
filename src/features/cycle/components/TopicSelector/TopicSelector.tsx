@@ -47,7 +47,6 @@ export function TopicSelector({ topics, selectedTopics, onSelect }: TopicSelecto
         }
 
         onSelect(newSelection);
-        setIsOpen(false);
     };
 
     const filteredTopics = topics.filter(topic =>

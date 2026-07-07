@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { StudyWidget } from '@/features/study/components/study-widget/StudyWidget';
+import { studyTimerService } from '@/features/study/services/studyTimerService';
 import { TimelineInfinite } from '@/features/cycle/components/TimelineInfinite/TimelineInfinite';
 import { Widget } from '../components/Widget/Widget';
 import { Button } from '@/shared/components/ui/Button/Button';
@@ -65,6 +66,8 @@ export const DashboardPage = () => {
             topicName: block.topicName,
             position: block.position,
             minutes: block.minutes,
+
+            originalMinutes: block.originalMinutes ?? block.minutes,
             completed: block.completed || false,
             currentContent: block.currentContent || getContentTitle(block.topicId),
         }));
@@ -98,14 +101,12 @@ export const DashboardPage = () => {
         }
 
         if (content) {
-            const totalTimeSpent = content.studyData?.totalTimeSpent || 0;
-            const initialElapsedSeconds = Math.floor(totalTimeSpent * 60);
 
             setCurrentContent({
                 contentId: content.id,
                 contentTitle: activeBlock.currentContent || content.title,
-                estimatedTime: activeBlock.minutes,
-                initialElapsedTime: initialElapsedSeconds,
+                estimatedTime: activeBlock.originalMinutes ?? activeBlock.minutes,
+                initialElapsedTime: 0,
                 checklist: content.checklist,
                 questionLists: content.studyData?.questionLists,
             });
@@ -113,7 +114,7 @@ export const DashboardPage = () => {
             setCurrentContent({
                 contentId: activeBlock.id,
                 contentTitle: activeBlock.currentContent,
-                estimatedTime: activeBlock.minutes,
+                estimatedTime: activeBlock.originalMinutes ?? activeBlock.minutes,
                 initialElapsedTime: 0,
                 checklist: [],
                 questionLists: [],
@@ -180,20 +181,14 @@ export const DashboardPage = () => {
         isProcessingMinute.current = true;
 
         try {
-            console.log(`Processando 1 minuto estudado`);
 
-            const minutesToProcess = 1;
+            const minutesToProcess = minutes;
+            console.log(`Processando ${minutesToProcess} minuto(s) estudado(s)`);
 
             await decrementBlockMinutes(activeBlockId, minutesToProcess);
 
             const activeBlock = cycleBlocks.find(block => block.id === activeBlockId);
-            if (activeBlock) {
-                setCurrentContent(prev => prev ? {
-                    ...prev,
-                    estimatedTime: activeBlock.minutes,
-                    initialElapsedTime: (prev.initialElapsedTime || 0) + (minutesToProcess * 60)
-                } : null);
-            }
+
 
             const topic = topics.find(t => t.id === activeBlock?.topicId);
             if (topic) {
@@ -247,6 +242,7 @@ export const DashboardPage = () => {
                         : c
                 );
                 await updateTopic(topic.id, { contents: updatedContents });
+                studyTimerService.clearProgress(contentId);
             }
 
             await completeBlock(activeBlockId);

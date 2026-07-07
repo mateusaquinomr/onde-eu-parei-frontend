@@ -4,6 +4,7 @@ import { Input } from '@/shared/components/ui/Form/Input';
 import { Select } from '@/shared/components/ui/Form/Select';
 import { TagInput } from '@/shared/components/ui/Form/TagInput/TagInput';
 import { Button } from '@/shared/components/ui/Button/Button';
+import { useEditais } from '@/features/editais/hooks/useEditais';
 import type { NotebookColor, DifficultyLevel, Tag } from '../../types/topic.types';
 import styles from './CreateTopicModal.module.css';
 
@@ -12,6 +13,7 @@ interface Step1BasicInfoProps {
         name: string;
         notebookColor: NotebookColor;
         difficulty: DifficultyLevel;
+        editalId?: string;
         tags: Tag[];
     }>;
     onNext: (data: any) => void;
@@ -34,6 +36,7 @@ const difficultyOptions = [
 ];
 
 export function Step1BasicInfo({ initialData, onNext, onCancel }: Step1BasicInfoProps) {
+    const { editais, loading: editaisLoading } = useEditais();
     const [name, setName] = useState(initialData?.name || '');
     const [notebookColor, setNotebookColor] = useState<NotebookColor>(
         initialData?.notebookColor || 'azul'
@@ -41,11 +44,17 @@ export function Step1BasicInfo({ initialData, onNext, onCancel }: Step1BasicInfo
     const [difficulty, setDifficulty] = useState<DifficultyLevel>(
         initialData?.difficulty || 'medio'
     );
+    const [editalId, setEditalId] = useState<string | undefined>(initialData?.editalId);
     const [tags, setTags] = useState<Tag[]>(initialData?.tags || []);
+
+    const editalOptions = [
+        { label: 'Nenhum', value: '' },
+        ...editais.map(e => ({ label: e.nome, value: e.id }))
+    ];
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        onNext({ name, notebookColor, difficulty, tags });
+        onNext({ name, notebookColor, difficulty, editalId: editalId || undefined, tags });
     };
 
     return (
@@ -80,6 +89,14 @@ export function Step1BasicInfo({ initialData, onNext, onCancel }: Step1BasicInfo
                     </FormField>
                 </div>
             </div>
+
+            <FormField label="Edital" helperText="Selecione o edital ao qual este tópico pertence">
+                <Select
+                    value={editalId || ''}
+                    onChange={(value) => setEditalId(value || undefined)}
+                    options={editalOptions}
+                />
+            </FormField>
 
             <FormField
                 label="Tags"
