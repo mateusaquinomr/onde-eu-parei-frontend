@@ -416,7 +416,14 @@ export const DashboardPage = () => {
 
                 <div className={styles.rightColumn}>
                     <Widget title="Tarefas">
-                        <TasksWidget />
+                       <div style={{ 
+            background: 'red', 
+            padding: '20px', 
+            color: 'white',
+            fontWeight: 'bold'
+        }}>
+          aquiii
+        </div>
                     </Widget>
                     <PlaceholderCard />
                     <PlaceholderCard />
@@ -472,7 +479,14 @@ export const DashboardPage = () => {
 
             <div className={styles.rightColumn}>
                 <Widget>
-                    <TasksWidget />
+                     <div style={{ 
+            background: 'red', 
+            padding: '20px', 
+            color: 'white',
+            fontWeight: 'bold'
+        }}>
+           aquiii
+        </div>
                 </Widget>
                 <PlaceholderCard />
                 <PlaceholderCard />
