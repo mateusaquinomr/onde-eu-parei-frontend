@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { StudyWidget } from '@/features/study/components/study-widget/StudyWidget';
 import { studyTimerService } from '@/features/study/services/studyTimerService';
+import { TasksWidget } from '@/features/tasks/components/tasks-widget/TasksWidget';
 import { TimelineInfinite } from '@/features/cycle/components/TimelineInfinite/TimelineInfinite';
 import { Widget } from '../components/Widget/Widget';
 import { Button } from '@/shared/components/ui/Button/Button';
@@ -9,6 +10,7 @@ import { useTopics } from '@/features/topics/hooks/useTopics';
 import { useCycle } from '@/features/cycle/hooks/useCycle';
 import type { CycleBlock } from '@/features/cycle/types/cycle.types';
 import type { Content, ChecklistItem, QuestionList } from '@/features/topics/types/topic.types';
+import type { Note } from '@/features/study/types/study.types';
 import styles from './DashboardPage.module.css';
 
 const PlaceholderCard = () => {
@@ -32,6 +34,7 @@ export const DashboardPage = () => {
         initialElapsedTime: number;
         checklist?: ChecklistItem[];
         questionLists?: QuestionList[];
+        notes?: Note[];
     } | null>(null);
 
     const isProcessingMinute = useRef(false);
@@ -80,6 +83,15 @@ export const DashboardPage = () => {
         }
     }, [cycleBlocks, activeBlockId]);
 
+    const parseNotes = (notesString?: string): Note[] => {
+        if (!notesString) return [];
+        try {
+            return JSON.parse(notesString) as Note[];
+        } catch {
+            return [];
+        }
+    };
+
     useEffect(() => {
         if (!activeBlockId) {
             setCurrentContent(null);
@@ -89,35 +101,17 @@ export const DashboardPage = () => {
         const activeBlock = cycleBlocks.find(block => block.id === activeBlockId);
         if (!activeBlock) return;
 
-        const topic = topics.find(t => t.id === activeBlock.topicId);
-        let content: Content | null = null;
-
-        if (activeBlock.currentContent && activeBlock.currentContent !== "Clique para começar") {
-            content = topic?.contents.find(c => c.title === activeBlock.currentContent) || null;
-        }
-
-        if (!content) {
-            content = getCurrentContentFromTopic(activeBlock.topicId);
-        }
+        const content = getCurrentContentFromTopic(activeBlock.topicId);
 
         if (content) {
-
             setCurrentContent({
                 contentId: content.id,
-                contentTitle: activeBlock.currentContent || content.title,
+                contentTitle: content.title,
                 estimatedTime: activeBlock.originalMinutes ?? activeBlock.minutes,
                 initialElapsedTime: 0,
                 checklist: content.checklist,
                 questionLists: content.studyData?.questionLists,
-            });
-        } else if (activeBlock.currentContent && activeBlock.currentContent !== "Clique para começar") {
-            setCurrentContent({
-                contentId: activeBlock.id,
-                contentTitle: activeBlock.currentContent,
-                estimatedTime: activeBlock.originalMinutes ?? activeBlock.minutes,
-                initialElapsedTime: 0,
-                checklist: [],
-                questionLists: [],
+                notes: parseNotes(content.studyData?.notes),
             });
         } else {
             setCurrentContent(null);
@@ -163,6 +157,29 @@ export const DashboardPage = () => {
             );
             await updateTopic(topic.id, { contents: updatedContents });
             setCurrentContent(prev => prev ? { ...prev, questionLists: lists } : null);
+        }
+    };
+
+    const handleUpdateNotes = async (notes: Note[]) => {
+        if (!activeBlockId || !currentContent) return;
+        const activeBlock = cycleBlocks.find(block => block.id === activeBlockId);
+        if (!activeBlock) return;
+        const topic = topics.find(t => t.id === activeBlock.topicId);
+        if (topic) {
+            const serialized = JSON.stringify(notes);
+            const updatedContents = topic.contents.map(c =>
+                c.id === currentContent.contentId
+                    ? {
+                        ...c,
+                        studyData: {
+                            ...c.studyData,
+                            notes: serialized
+                        }
+                    }
+                    : c
+            );
+            await updateTopic(topic.id, { contents: updatedContents });
+            setCurrentContent(prev => prev ? { ...prev, notes } : null);
         }
     };
 
@@ -263,6 +280,33 @@ export const DashboardPage = () => {
                 }
             }
         }
+    };
+
+    const handleFinishContent = async (contentId: string, totalSeconds: number) => {
+        if (!activeBlockId) return;
+
+        const activeBlock = cycleBlocks.find(block => block.id === activeBlockId);
+        if (!activeBlock) return;
+
+        const topic = topics.find(t => t.id === activeBlock.topicId);
+        if (!topic) return;
+
+        const roundedSeconds = Math.floor(totalSeconds);
+        const updatedContents = topic.contents.map(c =>
+            c.id === contentId
+                ? {
+                    ...c,
+                    completed: true,
+                    studyData: {
+                        ...c.studyData,
+                        completedAt: new Date(),
+                        totalTimeSpent: roundedSeconds / 60
+                    }
+                }
+                : c
+        );
+        await updateTopic(topic.id, { contents: updatedContents });
+        studyTimerService.clearProgress(contentId);
     };
 
     const handleContinue = async (contentId: string) => {
@@ -371,7 +415,9 @@ export const DashboardPage = () => {
                 </div>
 
                 <div className={styles.rightColumn}>
-                    <PlaceholderCard />
+                    <Widget title="Tarefas">
+                        <TasksWidget />
+                    </Widget>
                     <PlaceholderCard />
                     <PlaceholderCard />
                 </div>
@@ -405,11 +451,14 @@ export const DashboardPage = () => {
                             onTimeUpdate={handleTimeUpdate}
                             onMinuteTick={handleMinuteTick}
                             onCompleteWithConfirmation={handleCompleteWithConfirmation}
+                            onFinishContent={handleFinishContent}
                             onContinue={handleContinue}
                             checklist={currentContent.checklist}
                             onUpdateChecklist={handleUpdateChecklist}
                             questionLists={currentContent.questionLists}
                             onUpdateQuestions={handleUpdateQuestions}
+                            notes={currentContent.notes}
+                            onUpdateNotes={handleUpdateNotes}
                         />
                     </Widget>
                 ) : (
@@ -422,7 +471,9 @@ export const DashboardPage = () => {
             </div>
 
             <div className={styles.rightColumn}>
-                <PlaceholderCard />
+                <Widget>
+                    <TasksWidget />
+                </Widget>
                 <PlaceholderCard />
                 <PlaceholderCard />
             </div>
