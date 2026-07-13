@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Notes } from '../notes/Notes';
 import { Checklist } from '../checklist/Checklist';
 import { Questions } from '../questions/Questions';
-import type { ChecklistItem, QuestionList } from '../../types/study.types';
+import type { ChecklistItem, QuestionList, Note } from '../../types/study.types';
 import styles from './StudyTools.module.css';
 
 interface StudyToolsProps {
@@ -12,6 +12,8 @@ interface StudyToolsProps {
     onUpdateChecklist?: (items: ChecklistItem[]) => void;
     questionLists?: QuestionList[];
     onUpdateQuestions?: (lists: QuestionList[]) => void;
+    notes?: Note[];
+    onUpdateNotes?: (notes: Note[]) => void;
 }
 
 export function StudyTools({
@@ -21,6 +23,8 @@ export function StudyTools({
     onUpdateChecklist,
     questionLists,
     onUpdateQuestions,
+    notes,
+    onUpdateNotes,
 }: StudyToolsProps) {
     const [activeTab, setActiveTab] = useState<'notes' | 'todo' | 'questions'>('notes');
 
@@ -56,6 +60,8 @@ export function StudyTools({
                         topicId={topicId}
                         contentId={contentId}
                         showHeader={false}
+                        notes={notes}
+                        onUpdateNotes={onUpdateNotes}
                     />
                 )}
                 {activeTab === 'todo' && (

@@ -3,12 +3,13 @@ import { Text } from '@/shared/components/ui/Text/Text';
 import { Button } from '@/shared/components/ui/Button/Button';
 import { TimelineInfinite } from '../TimelineInfinite/TimelineInfinite';
 import { BlocksEditView } from '../BlocksEditView/BlocksEditView';
-import type { Cycle } from '../../types/cycle.types';
+import type { Cycle, CycleBlock } from '../../types/cycle.types';
 import styles from './CyclePanel.module.css';
 
 interface CyclePanelProps {
     cycle: Cycle;
     onReconfigure: () => void;
+    onSaveBlocks?: (blocks: CycleBlock[]) => Promise<unknown>;
 }
 
 const formatMinutes = (minutes: number): string => {
@@ -25,9 +26,11 @@ const formatMinutes = (minutes: number): string => {
     }
 };
 
-export function CyclePanel({ cycle, onReconfigure }: CyclePanelProps) {
+export function CyclePanel({ cycle, onReconfigure, onSaveBlocks }: CyclePanelProps) {
     const [isEditing, setIsEditing] = useState(false);
     const [hasChanges, setHasChanges] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
+    const [editedBlocks, setEditedBlocks] = useState<CycleBlock[]>(cycle.blocks);
     const [activeBlockId, setActiveBlockId] = useState<string | undefined>(
         cycle.blocks.find(b => !b.completed)?.id
     );
@@ -35,22 +38,34 @@ export function CyclePanel({ cycle, onReconfigure }: CyclePanelProps) {
     const remainingTime = formatMinutes(cycle.remainingMinutes);
 
     const handleEdit = () => {
+        setEditedBlocks(cycle.blocks);
         setIsEditing(true);
         setHasChanges(false);
     };
 
     const handleCancel = () => {
+        setEditedBlocks(cycle.blocks);
         setIsEditing(false);
         setHasChanges(false);
     };
 
-    const handleSave = () => {
-        console.log('Salvar alterações');
-        setIsEditing(false);
-        setHasChanges(false);
+    const handleSave = async () => {
+        if (!hasChanges) return;
+        setIsSaving(true);
+        try {
+            await onSaveBlocks?.(editedBlocks);
+            setIsEditing(false);
+            setHasChanges(false);
+        } catch (error) {
+            console.error('Erro ao salvar blocos:', error);
+            alert('Não foi possível salvar as alterações. Tente novamente.');
+        } finally {
+            setIsSaving(false);
+        }
     };
 
-    const handleChange = () => {
+    const handleChange = (blocks: CycleBlock[]) => {
+        setEditedBlocks(blocks);
         setHasChanges(true);
     };
 
@@ -67,7 +82,7 @@ export function CyclePanel({ cycle, onReconfigure }: CyclePanelProps) {
                                 variant="ghost"
                                 icon={<span className="material-icons">check</span>}
                                 onClick={handleSave}
-                                disabled={!hasChanges}
+                                disabled={!hasChanges || isSaving}
                                 className={hasChanges ? styles.saveActive : styles.saveDisabled}
                                 aria-label="Salvar alterações"
                             />
@@ -75,6 +90,7 @@ export function CyclePanel({ cycle, onReconfigure }: CyclePanelProps) {
                                 variant="ghost"
                                 icon={<span className="material-icons">close</span>}
                                 onClick={handleCancel}
+                                disabled={isSaving}
                                 aria-label="Cancelar edição"
                             />
                         </>

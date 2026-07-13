@@ -130,6 +130,27 @@ class CycleService {
         }
     }
 
+    async updateBlocks(cycleId: string, blocks: CycleBlock[]): Promise<Cycle | null> {
+        if (!cycleId || cycleId === 'undefined') {
+            console.error('x updateBlocks: cycleId inválido:', cycleId);
+            return null;
+        }
+
+        try {
+            const normalizedBlocks = blocks.map((block, index) => ({
+                ...block,
+                position: index
+            }));
+
+            const response = await api.put(`/cycles/${cycleId}`, { blocks: normalizedBlocks });
+            this.currentCycle = response.data;
+            return this.currentCycle;
+        } catch (error) {
+            console.error('Erro ao atualizar blocos do ciclo:', error);
+            throw error;
+        }
+    }
+
     async syncWithTopics(cycleId: string, topics: Topic[]): Promise<Cycle | null> {
         if (!cycleId || cycleId === 'undefined') {
             console.error('x syncWithTopics: cycleId inválido:', cycleId);

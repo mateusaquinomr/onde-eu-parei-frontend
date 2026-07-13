@@ -1,6 +1,6 @@
 import { Timer } from '../timer/Timer';
 import { StudyTools } from '../study-tools/StudyTools';
-import type { ChecklistItem, QuestionList } from '../../types/study.types';
+import type { ChecklistItem, QuestionList, Note } from '../../types/study.types';
 import styles from './StudyWidget.module.css';
 
 interface StudyWidgetProps {
@@ -13,11 +13,14 @@ interface StudyWidgetProps {
     onTimeUpdate?: (contentId: string, elapsedSeconds: number) => void;
     onMinuteTick?: (contentId: string, minutes: number) => void;
     onCompleteWithConfirmation?: (contentId: string, totalSeconds: number, contentCompleted: boolean) => void;
+    onFinishContent?: (contentId: string, totalSeconds: number) => void;
     onContinue?: (contentId: string) => void;
     checklist?: ChecklistItem[];
     onUpdateChecklist?: (items: ChecklistItem[]) => void;
     questionLists?: QuestionList[];
     onUpdateQuestions?: (lists: QuestionList[]) => void;
+    notes?: Note[];
+    onUpdateNotes?: (notes: Note[]) => void;
     className?: string;
 }
 
@@ -31,11 +34,14 @@ export function StudyWidget({
     onTimeUpdate,
     onMinuteTick,
     onCompleteWithConfirmation,
+    onFinishContent,
     onContinue,
     checklist,
     onUpdateChecklist,
     questionLists,
     onUpdateQuestions,
+    notes,
+    onUpdateNotes,
     className = ''
 }: StudyWidgetProps) {
     return (
@@ -51,6 +57,7 @@ export function StudyWidget({
                     onTimeUpdate={onTimeUpdate}
                     onMinuteTick={onMinuteTick}
                     onCompleteWithConfirmation={onCompleteWithConfirmation}
+                    onFinishContent={onFinishContent}
                     onContinue={onContinue}
                 />
             </div>
@@ -63,6 +70,8 @@ export function StudyWidget({
                     onUpdateChecklist={onUpdateChecklist}
                     questionLists={questionLists}
                     onUpdateQuestions={onUpdateQuestions}
+                    notes={notes}
+                    onUpdateNotes={onUpdateNotes}
                 />
             </div>
         </div>

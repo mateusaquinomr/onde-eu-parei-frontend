@@ -115,6 +115,46 @@
     border-width: 2px;
 }
 
+.completedCard {
+    background: #f0fdf4;
+    border-color: #86efac;
+}
+
+.completedCard .topicName {
+    color: #166534;
+    text-decoration: line-through;
+    text-decoration-color: #86efac;
+}
+
+.completedCard .lastContentText,
+.completedCard .lastContentLabel {
+    color: #4ade80;
+}
+
+.completedCard .position {
+    background-color: #4ade80;
+    color: #fff;
+}
+
+.completedDot {
+    background: #22c55e;
+}
+
+.completedBadge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #16a34a;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.completedBadge .material-icons {
+    font-size: 16px;
+    color: #22c55e;
+}
+
 .leftSide {
     flex: 1;
     display: flex;

@@ -12,18 +12,27 @@ interface NotesProps {
     topicId: string;
     contentId: string;
     showHeader?: boolean;
+    notes?: Note[];
+    onUpdateNotes?: (notes: Note[]) => void;
 }
 
-export function Notes({ topicId, contentId, showHeader = true }: NotesProps) {
+export function Notes({ topicId, contentId, showHeader = true, notes: notesProp, onUpdateNotes }: NotesProps) {
+    const isControlled = onUpdateNotes !== undefined;
+
     const { topics, updateTopic } = useTopics();
+    const [internalNotes, setInternalNotes] = useState<Note[]>([]);
+
     const [viewMode, setViewMode] = useState<ViewMode>('default');
-    const [notes, setNotes] = useState<Note[]>([]);
     const [text, setText] = useState('');
     const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
     const [showAllNotes, setShowAllNotes] = useState(false);
     const [showInput, setShowInput] = useState(false);
 
+    const notes = isControlled ? (notesProp || []) : internalNotes;
+
     useEffect(() => {
+        if (isControlled) return;
+
         const topic = topics.find(t => t.id === topicId);
         const content = topic?.contents.find(c => c.id === contentId);
         const notesString = content?.studyData?.notes || '';
@@ -31,16 +40,23 @@ export function Notes({ topicId, contentId, showHeader = true }: NotesProps) {
         if (notesString) {
             try {
                 const parsedNotes = JSON.parse(notesString) as Note[];
-                setNotes(parsedNotes);
+                setInternalNotes(parsedNotes);
             } catch {
-                setNotes([]);
+                setInternalNotes([]);
             }
         } else {
-            setNotes([]);
+            setInternalNotes([]);
         }
-    }, [topics, topicId, contentId]);
+    }, [isControlled, topics, topicId, contentId]);
 
     const saveNotes = useCallback(async (updatedNotes: Note[]) => {
+        if (isControlled) {
+            onUpdateNotes?.(updatedNotes);
+            return;
+        }
+
+        setInternalNotes(updatedNotes);
+
         const topic = topics.find(t => t.id === topicId);
         if (!topic) return;
 
@@ -59,7 +75,7 @@ export function Notes({ topicId, contentId, showHeader = true }: NotesProps) {
         );
 
         await updateTopic(topicId, { contents: updatedContents });
-    }, [topics, topicId, contentId, updateTopic]);
+    }, [isControlled, onUpdateNotes, topics, topicId, contentId, updateTopic]);
 
     function handleSave() {
         if (!text.trim()) {
@@ -79,7 +95,6 @@ export function Notes({ topicId, contentId, showHeader = true }: NotesProps) {
                     }
                     : note
             );
-            setNotes(updatedNotes);
             saveNotes(updatedNotes);
         } else {
             const newNote: Note = {
@@ -88,7 +103,6 @@ export function Notes({ topicId, contentId, showHeader = true }: NotesProps) {
                 createdAt: new Date(),
             };
             const updatedNotes = [newNote, ...notes];
-            setNotes(updatedNotes);
             saveNotes(updatedNotes);
         }
 
@@ -118,12 +132,10 @@ export function Notes({ topicId, contentId, showHeader = true }: NotesProps) {
 
     function handleDelete(id: string) {
         const updatedNotes = notes.filter(note => note.id !== id);
-        setNotes(updatedNotes);
         saveNotes(updatedNotes);
     }
 
     function handleReorder(reorderedNotes: Note[]) {
-        setNotes(reorderedNotes);
         saveNotes(reorderedNotes);
     }
 

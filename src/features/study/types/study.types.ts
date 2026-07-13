@@ -24,6 +24,7 @@ export interface TimerProps {
     onTimeUpdate?: (contentId: string, elapsedSeconds: number) => void;
     onComplete?: (contentId: string, totalSeconds: number) => void;
     onCompleteWithConfirmation?: (contentId: string, totalSeconds: number, contentCompleted: boolean) => void;
+    onFinishContent?: (contentId: string, totalSeconds: number) => void;
     onMinuteTick?: (contentId: string, minutes: number) => void;
     onContinue?: (contentId: string) => void;
     className?: string;
@@ -84,6 +85,8 @@ export interface NotesProps {
     topicId: string;
     contentId: string;
     showHeader?: boolean;
+    notes?: Note[];
+    onUpdateNotes?: (notes: Note[]) => void;
 }
 
 export interface StudyToolsProps {
@@ -93,6 +96,8 @@ export interface StudyToolsProps {
     onUpdateChecklist?: (items: ChecklistItem[]) => void;
     questionLists?: QuestionList[];
     onUpdateQuestions?: (lists: QuestionList[]) => void;
+    notes?: Note[];
+    onUpdateNotes?: (notes: Note[]) => void;
 }
 
 export interface StudyWidgetProps {
@@ -105,10 +110,13 @@ export interface StudyWidgetProps {
     onTimeUpdate?: (contentId: string, elapsedSeconds: number) => void;
     onMinuteTick?: (contentId: string, minutes: number) => void;
     onCompleteWithConfirmation?: (contentId: string, totalSeconds: number, contentCompleted: boolean) => void;
+    onFinishContent?: (contentId: string, totalSeconds: number) => void;
     onContinue?: (contentId: string) => void;
     checklist?: ChecklistItem[];
     onUpdateChecklist?: (items: ChecklistItem[]) => void;
     questionLists?: QuestionList[];
     onUpdateQuestions?: (lists: QuestionList[]) => void;
+    notes?: Note[];
+    onUpdateNotes?: (notes: Note[]) => void;
     className?: string;
 }

@@ -13,6 +13,7 @@ export function Timer({
     onTimeUpdate,
     onComplete,
     onCompleteWithConfirmation,
+    onFinishContent,
     onMinuteTick,
     onContinue,
     className = ''
@@ -39,25 +40,10 @@ export function Timer({
         onMinuteTick
     });
 
-    const [isActive, setIsActive] = useState(false);
-    const [isTransitioning, setIsTransitioning] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
 
-    useEffect(() => {
-        if (isRunning && !isActive) {
-            setIsTransitioning(true);
-            setTimeout(() => {
-                setIsActive(true);
-                setTimeout(() => setIsTransitioning(false), 300);
-            }, 50);
-        } else if (!isRunning && isActive && !timerCompleted) {
-            setIsTransitioning(true);
-            setIsActive(false);
-            setTimeout(() => setIsTransitioning(false), 300);
-        } else if (timerCompleted && isActive) {
-            setIsActive(false);
-        }
-    }, [isRunning, timerCompleted, isActive]);
+    const [showFinishConfirmation, setShowFinishConfirmation] = useState(false);
+    const [pendingFinishElapsed, setPendingFinishElapsed] = useState(0);
 
     useEffect(() => {
         if (timerCompleted) {
@@ -80,23 +66,115 @@ export function Timer({
         onCompleteWithConfirmation?.(contentId, elapsedSeconds, contentCompleted);
     };
 
-    if (isActive && isRunning && !timerCompleted) {
-        return (
-            <div className={`${styles.container} ${className}`}>
-                <div className={styles.header}>
-                    <div>
-                        <h3 className={styles.topicName}>{topicName}</h3>
-                        <p className={styles.contentTitle}>{contentTitle}</p>
-                    </div>
+
+    const handleOpenFinishConfirmation = () => {
+        const finalElapsed = pause();
+        setPendingFinishElapsed(finalElapsed);
+        setShowFinishConfirmation(true);
+    };
+
+    const handleFinishConfirm = (confirmed: boolean) => {
+        setShowFinishConfirmation(false);
+        if (confirmed) {
+            onFinishContent?.(contentId, pendingFinishElapsed);
+        } else {
+            start();
+        }
+    };
+
+    return (
+        <div className={`${styles.container} ${className}`}>
+            <div className={styles.header}>
+                <div className={styles.headerText}>
+                    <h3 className={styles.topicName}>{topicName}</h3>
+                    <p className={styles.contentTitle}>{contentTitle}</p>
                 </div>
 
-                <div className={`${styles.activeContent} ${isTransitioning ? styles.transitioning : ''}`}>
-                    <div className={styles.activeTimerWrapper}>
+                {!timerCompleted && !showFinishConfirmation && (
+                    <button
+                        className={styles.finishIconButton}
+                        onClick={handleOpenFinishConfirmation}
+                        title="Concluir este conteúdo agora"
+                    >
+                        <span className="material-icons">task_alt</span>
+                    </button>
+                )}
+            </div>
+
+            {timerCompleted ? (
+                showConfirmation ? (
+                    <div className={styles.confirmationContainer}>
+                        <p className={styles.confirmationText}>
+                            Você concluiu o estudo de "{contentTitle}"?
+                        </p>
+                        <div className={styles.confirmationButtons}>
+                            <button
+                                className={`${styles.actionButton} ${styles.confirmYesButton}`}
+                                onClick={() => handleCompleteConfirm(true)}
+                            >
+                                <span className="material-icons">check</span>
+                                Sim
+                            </button>
+                            <button
+                                className={`${styles.actionButton} ${styles.confirmNoButton}`}
+                                onClick={() => handleCompleteConfirm(false)}
+                            >
+                                <span className="material-icons">close</span>
+                                Não
+                            </button>
+                        </div>
+                    </div>
+                ) : (
+                    <div className={styles.mainContent}>
+                        <span className={styles.completedBadge}>Tempo concluído!</span>
+                        <div className={styles.actionsWrapper}>
+                            <button
+                                className={`${styles.actionButton} ${styles.completeButton}`}
+                                onClick={() => setShowConfirmation(true)}
+                            >
+                                <span className="material-icons">check_circle</span>
+                                Concluir
+                            </button>
+                            <button
+                                className={`${styles.actionButton} ${styles.continueButton}`}
+                                onClick={handleContinue}
+                            >
+                                <span className="material-icons">play_circle</span>
+                                Continuar
+                            </button>
+                        </div>
+                    </div>
+                )
+            ) : showFinishConfirmation ? (
+                <div className={styles.confirmationContainer}>
+                    <p className={styles.confirmationText}>
+                        Concluir "{contentTitle}" antecipadamente? O tempo até agora ({formattedTime}) será registrado, e o bloco continua com o próximo conteúdo.
+                    </p>
+                    <div className={styles.confirmationButtons}>
+                        <button
+                            className={`${styles.actionButton} ${styles.confirmYesButton}`}
+                            onClick={() => handleFinishConfirm(true)}
+                        >
+                            <span className="material-icons">check</span>
+                            Sim, concluir
+                        </button>
+                        <button
+                            className={`${styles.actionButton} ${styles.confirmNoButton}`}
+                            onClick={() => handleFinishConfirm(false)}
+                        >
+                            <span className="material-icons">close</span>
+                            Continuar estudando
+                        </button>
+                    </div>
+                </div>
+            ) : (
+                <div className={styles.mainContent}>
+                    <div className={styles.timerWrapper}>
                         <svg
-                            className={styles.activeProgressRing}
+                            className={styles.progressRing}
                             viewBox="0 0 200 200"
-                            width="200"
-                            height="200"
+                            width="180"
+                            height="180"
                         >
                             <circle
                                 className={styles.backgroundRing}
@@ -123,18 +201,18 @@ export function Timer({
                             />
                             <g className={styles.textGroup}>
                                 <text
-                                    className={styles.activeCurrentTimeText}
+                                    className={styles.currentTimeText}
                                     x="100"
-                                    y="85"
+                                    y="90"
                                     textAnchor="middle"
                                     dominantBaseline="middle"
                                 >
                                     {formattedTime}
                                 </text>
                                 <text
-                                    className={styles.activeEstimatedTimeText}
+                                    className={styles.estimatedTimeText}
                                     x="100"
-                                    y="115"
+                                    y="118"
                                     textAnchor="middle"
                                     dominantBaseline="middle"
                                 >
@@ -144,158 +222,26 @@ export function Timer({
                         </svg>
                     </div>
 
-                    <div className={styles.pauseWrapper}>
+                    <div className={styles.controlsRow}>
                         <button
-                            className={styles.pauseIconButton}
-                            onClick={pause}
-                            title="Pausar"
+                            className={styles.controlIconButton}
+                            onClick={isRunning ? pause : start}
+                            title={isRunning ? 'Pausar' : 'Iniciar'}
                         >
-                            <span className="material-icons">pause</span>
+                            <span className="material-icons">{isRunning ? 'pause' : 'play_arrow'}</span>
+                        </button>
+
+                        <button
+                            className={`${styles.controlIconButton} ${styles.resetIconButton} ${elapsedSeconds === 0 ? styles.disabled : ''}`}
+                            onClick={reset}
+                            disabled={elapsedSeconds === 0}
+                            title="Reiniciar"
+                        >
+                            <span className="material-icons">refresh</span>
                         </button>
                     </div>
                 </div>
-            </div>
-        );
-    }
-
-    return (
-        <div className={`${styles.container} ${className}`}>
-            <div className={styles.header}>
-                <div>
-                    <h3 className={styles.topicName}>{topicName}</h3>
-                    <p className={styles.contentTitle}>{contentTitle}</p>
-                </div>
-                {timerCompleted && (
-                    <span className={styles.completedBadge}>Tempo concluído!</span>
-                )}
-            </div>
-
-            <div className={styles.mainContent}>
-                <div className={styles.timerWrapper}>
-                    <svg
-                        className={styles.progressRing}
-                        viewBox="0 0 160 160"
-                        width="160"
-                        height="160"
-                    >
-                        <circle
-                            className={styles.backgroundRing}
-                            cx="80"
-                            cy="80"
-                            r={radius}
-                            fill="none"
-                            strokeWidth="8"
-                        />
-                        <circle
-                            className={styles.progressRingFill}
-                            cx="80"
-                            cy="80"
-                            r={radius}
-                            fill="none"
-                            strokeWidth="8"
-                            strokeLinecap="round"
-                            strokeDasharray={circumference}
-                            strokeDashoffset={strokeDashoffset}
-                            transform="rotate(-90 80 80)"
-                            style={{
-                                transition: 'stroke-dashoffset 0.3s ease'
-                            }}
-                        />
-                        <g className={styles.textGroup}>
-                            <text
-                                className={styles.currentTimeText}
-                                x="80"
-                                y="70"
-                                textAnchor="middle"
-                                dominantBaseline="middle"
-                            >
-                                {formattedTime}
-                            </text>
-                            <text
-                                className={styles.estimatedTimeText}
-                                x="80"
-                                y="95"
-                                textAnchor="middle"
-                                dominantBaseline="middle"
-                            >
-                                {formattedEstimated}
-                            </text>
-                        </g>
-                    </svg>
-                </div>
-
-                <div className={styles.actionsWrapper}>
-                    {!timerCompleted ? (
-                        <>
-                            {!isRunning ? (
-                                <button
-                                    className={`${styles.actionButton} ${styles.startButton}`}
-                                    onClick={start}
-                                >
-                                    <span className="material-icons">play_arrow</span>
-                                    Iniciar
-                                </button>
-                            ) : (
-                                <button
-                                    className={`${styles.actionButton} ${styles.pauseButton}`}
-                                    onClick={pause}
-                                >
-                                    <span className="material-icons">pause</span>
-                                    Pausar
-                                </button>
-                            )}
-
-                            <button
-                                className={`${styles.actionButton} ${styles.resetButton} ${elapsedSeconds === 0 ? styles.disabled : ''}`}
-                                onClick={reset}
-                                disabled={elapsedSeconds === 0}
-                            >
-                                <span className="material-icons">refresh</span>
-                                Reiniciar
-                            </button>
-                        </>
-                    ) : showConfirmation ? (
-                        <div className={styles.confirmationContainer}>
-                            <p className={styles.confirmationText}>
-                                Você concluiu o estudo de "{contentTitle}"?
-                            </p>
-                            <div className={styles.confirmationButtons}>
-                                <button
-                                    className={`${styles.actionButton} ${styles.confirmYesButton}`}
-                                    onClick={() => handleCompleteConfirm(true)}
-                                >
-                                    <span className="material-icons">check</span>
-                                    Sim
-                                </button>
-                                <button
-                                    className={`${styles.actionButton} ${styles.confirmNoButton}`}
-                                    onClick={() => handleCompleteConfirm(false)}
-                                >
-                                    <span className="material-icons">close</span>
-                                    Não
-                                </button>
-                            </div>
-                        </div>
-                    ) : (
-                        <>
-                            <button
-                                className={`${styles.actionButton} ${styles.completeButton}`}
-                                onClick={() => setShowConfirmation(true)}
-                            >
-                                <span className="material-icons">check_circle</span>
-                                Concluir
-                            </button>
-                            <button
-                                className={`${styles.actionButton} ${styles.continueButton}`}
-                                onClick={handleContinue}
-                            >
-                                <span className="material-icons">play_circle</span>
-                                Continuar
-                            </button>
-                        </>
-                    )}
-                </div>
-            </div>
+            )}
         </div>
     );
 }

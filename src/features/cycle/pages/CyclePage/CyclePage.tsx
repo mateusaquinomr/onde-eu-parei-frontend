@@ -24,7 +24,8 @@ export function CyclePage() {
         closeConfigModal,
         currentStep,
         nextStep,
-        prevStep
+        prevStep,
+        updateBlocks
     } = useCycle();
 
     if (loading) {
@@ -60,6 +61,7 @@ export function CyclePage() {
                         <CyclePanel
                             cycle={currentCycle}
                             onReconfigure={openConfigModal}
+                            onSaveBlocks={updateBlocks}
                         />
                     ) : (
                         <div className={styles.emptyWidget}>

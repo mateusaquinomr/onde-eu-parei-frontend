@@ -13,6 +13,11 @@ interface NewEditalModalProps {
     editalParaEditar?: Edital | null;
 }
 
+function parseDateInputAsUTC(dateString: string): Date {
+    const [year, month, day] = dateString.split('-').map(Number);
+    return new Date(Date.UTC(year, month - 1, day));
+}
+
 export function NewEditalModal({ isOpen, onClose, onImportClick, onEditalCreated, editalParaEditar }: NewEditalModalProps) {
     const { createEdital, updateEdital, editais } = useEditais();
     const [showManualForm, setShowManualForm] = useState(false);
@@ -61,14 +66,14 @@ export function NewEditalModal({ isOpen, onClose, onImportClick, onEditalCreated
             await updateEdital(editalParaEditar.id, {
                 nome: nome.trim(),
                 banca: banca.trim(),
-                dataProva: new Date(dataProva),
+                dataProva: parseDateInputAsUTC(dataProva),
                 local: local.trim()
             });
         } else {
             await createEdital({
                 nome: nome.trim(),
                 banca: banca.trim(),
-                dataProva: new Date(dataProva),
+                dataProva: parseDateInputAsUTC(dataProva),
                 local: local.trim()
             });
         }

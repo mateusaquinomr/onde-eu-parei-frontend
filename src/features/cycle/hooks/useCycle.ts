@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import type { Cycle, CycleConfig, CycleRule, CycleSummary } from '../types/cycle.types';
+import type { Cycle, CycleConfig, CycleRule, CycleSummary, CycleBlock } from '../types/cycle.types';
 import { cycleService } from '../services/cycleService';
 import { useTopics } from '../../topics/hooks/useTopics';
 
@@ -129,6 +129,18 @@ export function useCycle() {
         return updatedCycle;
     }, [currentCycle]);
 
+    const updateBlocks = useCallback(async (blocks: CycleBlock[]) => {
+        if (!currentCycle) return null;
+
+        const updatedCycle = await cycleService.updateBlocks(currentCycle.id, blocks);
+        if (updatedCycle) {
+            setCurrentCycle(updatedCycle);
+            const summary = await cycleService.getSummary();
+            setCycleSummary(summary);
+        }
+        return updatedCycle;
+    }, [currentCycle]);
+
     const nextStep = useCallback(() => {
         setCurrentStep(prev => prev + 1);
     }, []);
@@ -161,6 +173,7 @@ export function useCycle() {
         generateCycle,
         completeBlock,
         decrementBlockMinutes,
+        updateBlocks,
         nextStep,
         prevStep,
         openConfigModal,

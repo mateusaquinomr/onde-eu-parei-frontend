@@ -232,6 +232,7 @@ export function TimelineInfinite({
                 <div className={styles.timeline}>
                     {duplicatedBlocks.map((block, index) => {
                         const isActive = block.id === activeBlockId;
+                        const isCompleted = block.completed;
                         const relativePos = (index % blocks.length) + 1;
                         const currentContent = block.currentContent || "Clique para começar";
 
@@ -243,10 +244,10 @@ export function TimelineInfinite({
                             >
                                 <div className={styles.lineContainer}>
                                     <div className={styles.line} />
-                                    <div className={`${styles.dot} ${isActive ? styles.activeDot : ''}`} />
+                                    <div className={`${styles.dot} ${isActive ? styles.activeDot : ''} ${isCompleted ? styles.completedDot : ''}`} />
                                 </div>
 
-                                <div className={`${styles.card} ${isActive ? styles.activeCard : ''}`}>
+                                <div className={`${styles.card} ${isActive ? styles.activeCard : ''} ${isCompleted ? styles.completedCard : ''}`}>
                                     <div className={styles.leftSide}>
                                         <div className={styles.titleRow}>
                                             <span className={`${styles.position} ${isActive ? styles.activePosition : ''}`}>
@@ -263,10 +264,17 @@ export function TimelineInfinite({
                                     </div>
 
                                     <div className={styles.rightSide}>
-                                        <div className={styles.timeInfo}>
-                                            <span className="material-icons">timer</span>
-                                            <span className={styles.minutes}>{block.minutes}min</span>
-                                        </div>
+                                        {isCompleted ? (
+                                            <div className={styles.completedBadge}>
+                                                <span className="material-icons">check_circle</span>
+                                                Concluído
+                                            </div>
+                                        ) : (
+                                            <div className={styles.timeInfo}>
+                                                <span className="material-icons">timer</span>
+                                                <span className={styles.minutes}>{block.minutes}min</span>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
