@@ -9,6 +9,7 @@ import { EditableMetadata } from '@/shared/components/ui/EditableMetadata/Editab
 import { useTopics } from '../hooks/useTopics';
 import { ContentList } from '../components/ContentList/ContentList';
 import { CircularProgress } from '../components/CircularProgress/CircularProgress';
+import { calculateNextReviewDate } from '@/features/reviews/services/reviewService';
 import type { Content, ImportanceLevel, NotebookColor, DifficultyLevel, ChecklistItem, QuestionList } from '../types/topic.types';
 import styles from './TopicDetailPage.module.css';
 
@@ -84,9 +85,35 @@ export function TopicDetailPage() {
     };
 
     const handleToggleComplete = (contentId: string) => {
-        const updatedContents = topic.contents.map(c =>
-            c.id === contentId ? { ...c, completed: !c.completed } : c
-        );
+        const now = new Date();
+        const updatedContents = topic.contents.map(c => {
+            if (c.id !== contentId) return c;
+            const completed = !c.completed;
+
+            if (completed) {
+                // Agenda a 1ª revisão (ou a próxima, se o conteúdo já tinha
+                // histórico de revisões de uma vez em que foi desmarcado e
+                // concluído de novo).
+                return {
+                    ...c,
+                    completed: true,
+                    studyData: {
+                        ...c.studyData,
+                        completedAt: now,
+                        nextReviewDate: calculateNextReviewDate(now, c.studyData?.reviewHistory)
+                    }
+                };
+            }
+
+            return {
+                ...c,
+                completed: false,
+                studyData: {
+                    ...c.studyData,
+                    nextReviewDate: null
+                }
+            };
+        });
         updateTopic(topic.id, { contents: updatedContents });
     };
 
@@ -148,6 +175,35 @@ export function TopicDetailPage() {
                     studyData: {
                         ...c.studyData,
                         questionLists
+                    }
+                }
+                : c
+        );
+        updateTopic(topic.id, { contents: updatedContents });
+    };
+
+    const handleCompleteReview = (contentId: string, durationMinutes: number) => {
+        const content = topic.contents.find(c => c.id === contentId);
+        if (!content) return;
+
+        const now = new Date();
+        const newHistoryEntry = {
+            id: crypto.randomUUID(),
+            date: now,
+            duration: durationMinutes,
+            notes: ''
+        };
+        const updatedHistory = [...(content.studyData?.reviewHistory || []), newHistoryEntry];
+
+        const updatedContents = topic.contents.map(c =>
+            c.id === contentId
+                ? {
+                    ...c,
+                    studyData: {
+                        ...c.studyData,
+                        lastReviewDate: now,
+                        nextReviewDate: calculateNextReviewDate(now, updatedHistory),
+                        reviewHistory: updatedHistory
                     }
                 }
                 : c
@@ -410,6 +466,7 @@ export function TopicDetailPage() {
                         onUpdateChecklist={handleUpdateChecklist}
                         onUpdateNotes={handleUpdateNotes}
                         onUpdateQuestions={handleUpdateQuestions}
+                        onCompleteReview={handleCompleteReview}
                     />
                 </div>
             </div>

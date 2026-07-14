@@ -34,6 +34,7 @@ interface ContentListProps {
     onUpdateChecklist: (contentId: string, items: ChecklistItem[]) => void;
     onUpdateNotes: (contentId: string, notes: string) => void;
     onUpdateQuestions?: (contentId: string, lists: QuestionList[]) => void;
+    onCompleteReview?: (contentId: string, durationMinutes: number) => void;
 }
 
 export function ContentList({
@@ -46,7 +47,8 @@ export function ContentList({
     onReorder,
     onUpdateChecklist,
     onUpdateNotes,
-    onUpdateQuestions
+    onUpdateQuestions,
+    onCompleteReview
 }: ContentListProps) {
     const [editingId, setEditingId] = useState<string | null>(null);
 
@@ -131,6 +133,7 @@ export function ContentList({
                                 onUpdateChecklist={onUpdateChecklist}
                                 onUpdateNotes={onUpdateNotes}
                                 onUpdateQuestions={onUpdateQuestions}
+                                onCompleteReview={onCompleteReview}
                                 showDragHandle={isEditing}
                             />
                         ))}

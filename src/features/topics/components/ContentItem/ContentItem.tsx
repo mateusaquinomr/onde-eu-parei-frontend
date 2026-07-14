@@ -21,6 +21,7 @@ interface ContentItemProps {
     onUpdateChecklist: (contentId: string, items: ChecklistItem[]) => void;
     onUpdateNotes: (contentId: string, notes: string) => void;
     onUpdateQuestions?: (contentId: string, lists: QuestionList[]) => void;
+    onCompleteReview?: (contentId: string, durationMinutes: number) => void;
     dragHandleProps?: any;
 }
 
@@ -55,12 +56,20 @@ export function ContentItem({
     onUpdateChecklist,
     onUpdateNotes,
     onUpdateQuestions,
+    onCompleteReview,
     dragHandleProps
 }: ContentItemProps) {
     const [editTitle, setEditTitle] = useState(content.title);
     const [editImportance, setEditImportance] = useState<ImportanceLevel>(content.importance);
     const [isExpanded, setIsExpanded] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
+    const [reviewDuration, setReviewDuration] = useState('');
+
+    const handleCompleteReview = () => {
+        const duration = reviewDuration ? Math.max(0, Math.floor(Number(reviewDuration))) : 0;
+        onCompleteReview?.(content.id, duration);
+        setReviewDuration('');
+    };
 
     const handleSave = () => {
         if (editTitle.trim()) {
@@ -103,7 +112,8 @@ export function ContentItem({
         return new Intl.DateTimeFormat('pt-BR', {
             day: '2-digit',
             month: '2-digit',
-            year: 'numeric'
+            year: 'numeric',
+            timeZone: 'UTC'
         }).format(new Date(date));
     };
 
@@ -111,8 +121,9 @@ export function ContentItem({
         if (!date) return '';
         const today = new Date();
         const reviewDate = new Date(date);
-        const diffTime = reviewDate.getTime() - today.getTime();
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        const todayUTC = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
+        const reviewUTC = Date.UTC(reviewDate.getUTCFullYear(), reviewDate.getUTCMonth(), reviewDate.getUTCDate());
+        const diffDays = Math.round((reviewUTC - todayUTC) / (1000 * 60 * 60 * 24));
 
         if (diffDays === 0) return 'hoje';
         if (diffDays === 1) return 'amanhã';
@@ -273,6 +284,26 @@ export function ContentItem({
                             {content.studyData?.nextReviewDate && (
                                 <div className={styles.statCardLabel}>
                                     {getDaysUntil(content.studyData.nextReviewDate)}
+                                </div>
+                            )}
+                            {content.studyData?.nextReviewDate && onCompleteReview && (
+                                <div className={styles.reviewActionRow}>
+                                    <input
+                                        className={styles.reviewDurationInput}
+                                        type="number"
+                                        min={0}
+                                        placeholder="min"
+                                        value={reviewDuration}
+                                        onChange={(e) => setReviewDuration(e.target.value)}
+                                    />
+                                    <button
+                                        className={styles.reviewCompleteButton}
+                                        onClick={handleCompleteReview}
+                                        title="Marcar como revisado"
+                                    >
+                                        <span className="material-icons">check</span>
+                                        Revisado
+                                    </button>
                                 </div>
                             )}
                             {content.studyData?.reviewHistory && content.studyData.reviewHistory.length > 0 && (
