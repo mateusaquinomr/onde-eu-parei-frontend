@@ -16,6 +16,7 @@ interface SortableContentItemProps {
     onUpdateChecklist: (contentId: string, items: ChecklistItem[]) => void;
     onUpdateNotes: (contentId: string, notes: string) => void;
     onUpdateQuestions?: (contentId: string, lists: QuestionList[]) => void;
+    onCompleteReview?: (contentId: string, durationMinutes: number) => void;
     showDragHandle?: boolean;
 }
 
@@ -61,6 +62,7 @@ export function SortableContentItem(props: SortableContentItemProps) {
                 onUpdateChecklist={props.onUpdateChecklist}
                 onUpdateNotes={props.onUpdateNotes}
                 onUpdateQuestions={props.onUpdateQuestions}
+                onCompleteReview={props.onCompleteReview}
                 dragHandleProps={props.showDragHandle ? { ...attributes, ...listeners } : undefined}
             />
         </div>

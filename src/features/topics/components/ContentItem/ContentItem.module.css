@@ -279,6 +279,50 @@
     color: #9ca3af;
 }
 
+.reviewActionRow {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.reviewDurationInput {
+    width: 44px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 4px 6px;
+    font-size: 12px;
+    text-align: center;
+    background: white;
+}
+
+.reviewDurationInput:focus {
+    outline: none;
+    border-color: #3b82f6;
+}
+
+.reviewCompleteButton {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    border: none;
+    border-radius: 6px;
+    padding: 5px 10px;
+    background: #10b981;
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.reviewCompleteButton .material-icons {
+    font-size: 14px;
+}
+
+.reviewCompleteButton:hover {
+    background: #059669;
+}
+
 .statCardDates {
     display: flex;
     flex-direction: column;

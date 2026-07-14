@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { StudyWidget } from '@/features/study/components/study-widget/StudyWidget';
 import { studyTimerService } from '@/features/study/services/studyTimerService';
 import { TasksWidget } from '@/features/tasks/components/tasks-widget/TasksWidget';
+import { ReviewWidget } from '@/features/reviews/components/review-widget/ReviewWidget';
+import { calculateNextReviewDate } from '@/features/reviews/services/reviewService';
 import { TimelineInfinite } from '@/features/cycle/components/TimelineInfinite/TimelineInfinite';
 import { Widget } from '../components/Widget/Widget';
 import { Button } from '@/shared/components/ui/Button/Button';
@@ -245,6 +247,7 @@ export const DashboardPage = () => {
         if (topic) {
             if (contentCompleted) {
                 const roundedSeconds = Math.floor(totalSeconds);
+                const completedAt = new Date();
                 const updatedContents = topic.contents.map(c =>
                     c.id === contentId
                         ? {
@@ -252,8 +255,9 @@ export const DashboardPage = () => {
                             completed: true,
                             studyData: {
                                 ...c.studyData,
-                                completedAt: new Date(),
-                                totalTimeSpent: roundedSeconds / 60
+                                completedAt,
+                                totalTimeSpent: roundedSeconds / 60,
+                                nextReviewDate: calculateNextReviewDate(completedAt, c.studyData?.reviewHistory)
                             }
                         }
                         : c
@@ -292,6 +296,7 @@ export const DashboardPage = () => {
         if (!topic) return;
 
         const roundedSeconds = Math.floor(totalSeconds);
+        const completedAt = new Date();
         const updatedContents = topic.contents.map(c =>
             c.id === contentId
                 ? {
@@ -299,14 +304,47 @@ export const DashboardPage = () => {
                     completed: true,
                     studyData: {
                         ...c.studyData,
-                        completedAt: new Date(),
-                        totalTimeSpent: roundedSeconds / 60
+                        completedAt,
+                        totalTimeSpent: roundedSeconds / 60,
+                        nextReviewDate: calculateNextReviewDate(completedAt, c.studyData?.reviewHistory)
                     }
                 }
                 : c
         );
         await updateTopic(topic.id, { contents: updatedContents });
         studyTimerService.clearProgress(contentId);
+    };
+
+    const handleCompleteReview = async (topicId: string, contentId: string, durationMinutes: number) => {
+        const topic = topics.find(t => t.id === topicId);
+        if (!topic) return;
+
+        const content = topic.contents.find(c => c.id === contentId);
+        if (!content) return;
+
+        const now = new Date();
+        const newHistoryEntry = {
+            id: crypto.randomUUID(),
+            date: now,
+            duration: durationMinutes,
+            notes: ''
+        };
+        const updatedHistory = [...(content.studyData?.reviewHistory || []), newHistoryEntry];
+
+        const updatedContents = topic.contents.map(c =>
+            c.id === contentId
+                ? {
+                    ...c,
+                    studyData: {
+                        ...c.studyData,
+                        lastReviewDate: now,
+                        nextReviewDate: calculateNextReviewDate(now, updatedHistory),
+                        reviewHistory: updatedHistory
+                    }
+                }
+                : c
+        );
+        await updateTopic(topic.id, { contents: updatedContents });
     };
 
     const handleContinue = async (contentId: string) => {
@@ -415,10 +453,12 @@ export const DashboardPage = () => {
                 </div>
 
                 <div className={styles.rightColumn}>
-                    <Widget title="Tarefas">
-                      <TasksWidget/>
+                    <Widget >
+                        <TasksWidget />
                     </Widget>
-                    <PlaceholderCard />
+                    <Widget>
+                        <ReviewWidget topics={topics} onCompleteReview={handleCompleteReview} />
+                    </Widget>
                     <PlaceholderCard />
                 </div>
             </div>
@@ -471,10 +511,12 @@ export const DashboardPage = () => {
             </div>
 
             <div className={styles.rightColumn}>
-                <Widget>
-                       <TasksWidget/>
+                <Widget >
+                    <TasksWidget />
                 </Widget>
-                <PlaceholderCard />
+                <Widget>
+                    <ReviewWidget topics={topics} onCompleteReview={handleCompleteReview} />
+                </Widget>
                 <PlaceholderCard />
             </div>
         </div>
