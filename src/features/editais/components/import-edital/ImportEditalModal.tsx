@@ -173,13 +173,20 @@ export function ImportEditalModal({ isOpen, onClose, onImport }: ImportEditalMod
                 await refreshEditais();
                 const editalEncontrado = editais.find(e => e.nome === 'IFPI');
 
-                if (editalEncontrado) {
-                    editalId = editalEncontrado.id;
+                if (!editalEncontrado) {
+                    const novoEdital = await createEdital({
+                        nome: 'IFPI',
+                        banca: 'IDECAN',
+                        dataProva: new Date('2026-10-18'),
+                        local: 'Piauí'
+                    });
+                    editalId = novoEdital.id;
+                    await refreshEditais();
                 } else {
-                    editalId = 'ifpi';
+                    editalId = editalEncontrado.id;
                 }
             } catch (error) {
-                console.error('Erro ao verificar edital:', error);
+                console.error('Erro ao criar/verificar edital:', error);
                 const editalExistente = editais.find(e => e.nome === 'IFPI');
                 editalId = editalExistente ? editalExistente.id : 'ifpi';
             }
